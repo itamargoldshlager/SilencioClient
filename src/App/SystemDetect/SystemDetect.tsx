@@ -6,7 +6,7 @@ import Footer from "../Footer/Footer";
 import Detects from "./Mock/Persons";
 import {Grid} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import PopUp from './PopUp';
+import UserPopUp from './UserPopUp';
 import SilencioImage from "../utils/Silencio.png";
 
 const useStyles = makeStyles({
@@ -22,7 +22,7 @@ const SystemDetect : FC = () => {
     return (
         <div>
             <Header/>
-            <PopUp
+            <UserPopUp
                 show={true}
                 img={SilencioImage}
                 beginEntrancePermit={new Date()}
