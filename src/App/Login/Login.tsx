@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {ChangeEvent, FC, useState} from 'react';
 import loginImage from '../utils/Silencio.png'
 import Grid from '@material-ui/core/Grid';
 import {Button, TextField} from '@material-ui/core';
@@ -23,8 +23,19 @@ const useStyles = makeStyles({
     }
 });
 
-const LoginPage : FC = () => {
+
+interface LoginPageProps {
+    setLoggedIn: () => void
+}
+
+const LoginPage : FC<LoginPageProps> = ({setLoggedIn}) => {
     const classes = useStyles();
+    const [userName, setUserName] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+
+    const sendLoginRequest = () => {
+        setPassword('');
+    };
 
     return (
         <Grid container className={classes.root}>
@@ -39,6 +50,10 @@ const LoginPage : FC = () => {
                         label="user name"
                         variant={"outlined"}
                         fullWidth
+                        value={userName}
+                        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                            setUserName(event.target.value);
+                        }}
                     />
                 </div>
 
@@ -48,6 +63,10 @@ const LoginPage : FC = () => {
                         variant={"outlined"}
                         type="password"
                         fullWidth
+                        value={userName}
+                        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                            setPassword(event.target.value);
+                        }}
                     />
                 </div>
 
@@ -55,6 +74,7 @@ const LoginPage : FC = () => {
                     variant="contained"
                     color="primary"
                     className={classes.loginButton}
+                    onClick={sendLoginRequest}
                 >
                     Login
                 </Button>

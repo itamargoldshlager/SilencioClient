@@ -26,6 +26,69 @@ const Detects: PersonProps[] = [
         img:unKnown,
         detectDate: new Date()
     },
+    {
+        approve: true,
+        company: "Silencio",
+        name: "Osher Baslo",
+        img:unKnown,
+        detectDate: new Date()
+    },
+    {
+        approve: true,
+        company: "Silencio",
+        name: "Osher Baslo",
+        img:unKnown,
+        detectDate: new Date()
+    },
+    {
+        approve: true,
+        company: "Silencio",
+        name: "Osher Baslo",
+        img:unKnown,
+        detectDate: new Date()
+    },
+    {
+        approve: true,
+        company: "Silencio",
+        name: "Osher Baslo",
+        img:unKnown,
+        detectDate: new Date()
+    },
+    {
+        approve: true,
+        company: "Silencio",
+        name: "Osher Baslo",
+        img:unKnown,
+        detectDate: new Date()
+    },
+    {
+        approve: true,
+        company: "Silencio",
+        name: "Osher Baslo",
+        img:unKnown,
+        detectDate: new Date()
+    },
+    {
+        approve: true,
+        company: "Silencio",
+        name: "Osher Baslo",
+        img:unKnown,
+        detectDate: new Date()
+    },
+    {
+        approve: true,
+        company: "Silencio",
+        name: "Osher Baslo",
+        img:unKnown,
+        detectDate: new Date()
+    },
+    {
+        approve: true,
+        company: "Silencio",
+        name: "Osher Baslo",
+        img:unKnown,
+        detectDate: new Date()
+    },
 ];
 
 export default Detects;

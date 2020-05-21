@@ -47,7 +47,7 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-interface popUpProps {
+interface userDetailsProps {
     show: boolean,
     onClose: () => void,
     img: any,
@@ -59,7 +59,7 @@ interface popUpProps {
     endEntrancePermit: Date
 }
 
-const UserPopUp : FC<popUpProps> = ({onClose, show, img, firstName, lastName, company, phoneNumber,beginEntrancePermit, endEntrancePermit }) => {
+const UserDetails : FC<userDetailsProps> = ({onClose, show, img, firstName, lastName, company, phoneNumber,beginEntrancePermit, endEntrancePermit }) => {
     const classes = useStyles();
     return (
         <Dialog
@@ -178,4 +178,4 @@ const UserPopUp : FC<popUpProps> = ({onClose, show, img, firstName, lastName, co
     );
 };
 
-export default UserPopUp;
+export default UserDetails;

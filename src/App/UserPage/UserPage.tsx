@@ -1,12 +1,12 @@
 import React, {FC} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
-import SilencioImage from "../utils/Silencio.png";
-import DetailsImage from "./Details.png"
-import AddRequestImage from "./AddRequest.png"
-import RequestListImage from "./RequestList.png"
+import DetailsImage from "./Icons/Details.png"
+import AddRequestImage from "./Icons/AddRequest.png"
+import RequestListImage from "./Icons/RequestList.png"
 
 import Grid from '@material-ui/core/Grid';
 import {Button} from "@material-ui/core";
+import Header from "../Header/Header";
 
 const useStyles = makeStyles({
     root: {
@@ -29,6 +29,9 @@ const useStyles = makeStyles({
         float: "left",
         width: 120,
         height: 99,
+    },
+    options: {
+        marginTop: 40,
     },
     optionImage: {
         width: 215,
@@ -53,16 +56,8 @@ const UserPage : FC<UserPageProps> = ({name}) => {
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            <div className={classes.header}>
-                <img
-                    className={classes.headerImage}
-                    src={SilencioImage}
-                />
-                <h2 className={classes.title}>
-                    Hi, {name}
-                </h2>
-            </div>
-            <Grid container spacing={4}>
+            <Header title={`Hi, ${name}`}/>
+            <Grid container spacing={4} className={classes.options}>
                 <Grid item xs={4} justify={"center"}>
                     <div>
                         <img
