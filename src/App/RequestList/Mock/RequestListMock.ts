@@ -1,61 +1,48 @@
-import {RequestRowProps} from "../RequestRow"
-import RequestImage1 from "./1.jpg"
-import RequestImage2 from "./2.jpg"
-import RequestImage3 from "./3.jpg"
-import RequestImage4 from "./4.jpg"
-import RequestImage5 from "./5.jpg"
-import RequestImage6 from "./6.jpg"
+import {Request, RequestStatus} from "../RequestInterface/RequestInterface"
 
-const mock: RequestRowProps[] = [
+const mock: Request[] = [
     {
-        firstName: 'Julia',
-        lastName: 'Robert',
-        img: RequestImage1,
+        firstName: 'Osher',
+        lastName: 'Baslo',
         requestId: '1',
         startDate: new Date(),
-        endDate: new Date()
+        endDate: new Date(),
+        id: '205587504',
+        status: RequestStatus.Confirmed,
+        additionalInformation: {
+            company: 'Silencio',
+            requestBy: 'Tal pahima',
+            requestTime: new Date()
+        }
     },
     {
-        firstName: 'Alina',
-        lastName: 'Blob',
-        img: RequestImage2,
+        firstName: 'Itamar',
+        lastName: 'Gold',
         requestId: '2',
         startDate: new Date(),
-        endDate: new Date()
+        endDate: new Date(),
+        id: '232523521',
+        status: RequestStatus.Rejected,
+        additionalInformation: {
+            company: 'Silencio',
+            requestBy: 'Tal pahima',
+            requestTime: new Date()
+        }
     },
     {
-        firstName: 'Arik',
-        lastName: 'Goldshmit',
-        img: RequestImage3,
+        firstName: 'Lee',
+        lastName: 'Cata',
         requestId: '3',
         startDate: new Date(),
-        endDate: new Date()
+        endDate: new Date(),
+        id: '213423151',
+        status: RequestStatus.Pending,
+        additionalInformation: {
+            company: 'Silencio',
+            requestBy: 'Tal pahima',
+            requestTime: new Date()
+        }
     },
-    {
-        firstName: 'Jhon',
-        lastName: 'Wick',
-        img: RequestImage4,
-        requestId: '4',
-        startDate: new Date(),
-        endDate: new Date()
-    },
-    {
-        firstName: 'Yossi',
-        lastName: 'Bismut',
-        img: RequestImage5,
-        requestId: '5',
-        startDate: new Date(),
-        endDate: new Date()
-    },
-    {
-        firstName: 'Monni',
-        lastName: 'Dov',
-        img: RequestImage6,
-        requestId: '6',
-        startDate: new Date(),
-        endDate: new Date()
-    }
-
 ];
 
 export default mock;

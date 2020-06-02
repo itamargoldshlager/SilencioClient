@@ -31,18 +31,6 @@ const SystemDetect : FC = () => {
     };
     return (
         <div>
-            <Header title={"System Detect"}/>
-            {/*<UserPopUp*/}
-            {/*    show={true}*/}
-            {/*    img={SilencioImage}*/}
-            {/*    beginEntrancePermit={new Date()}*/}
-            {/*    endEntrancePermit={new Date()}*/}
-            {/*    company={"Silencio"}*/}
-            {/*    firstName={"itamar"}*/}
-            {/*    lastName={"Goldshlager"}*/}
-            {/*    onClose={() => {}}*/}
-            {/*    phoneNumber={"052-6533460"}*/}
-            {/*/>*/}
             <Filter/>
                 <div className={classes.systemDetect}>
                     <Grid container spacing={5} >

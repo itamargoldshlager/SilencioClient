@@ -40,3 +40,7 @@
 body{
   margin: unset;
 }
+
+#root, html, body {
+  height: 100%;
+}

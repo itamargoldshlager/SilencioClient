@@ -1,17 +1,38 @@
 import React, {FC, useEffect, useState} from 'react';
-import RequestRow from "./RequestRow";
 import RequestMock from "./Mock/RequestListMock"
-import {TablePagination} from "@material-ui/core";
+import {TablePagination, Table} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
+import MyRequestListHeader from "./MyRequestList/MyRequestListHeader";
+import MyRequestListRow from "./MyRequestList/MyRequestListRow";
+import ManagerRequestListHeader from "./ManagerRequestList/ManagerRequestListHeader";
+import ManagerRequestListRow from "./ManagerRequestList/ManagerRequestListRow";
+import ExitImage from "../utils/exit.png";
 
 const useStyles = makeStyles({
     root: {
-        width: '70%',
-        margin: 'auto'
-    }
+        '& .MuiTableCell-root': {
+            textAlign: 'center'
+        },
+        textAlign: 'initial'
+    },
+    exitImage: {
+        position: 'relative',
+        top: 0,
+        left: 5,
+    },
 });
 
-const RequestList : FC = () => {
+export enum requestListType {
+    manager,
+    my
+}
+
+interface requestListProps {
+    listType: requestListType
+    onClose:() => void
+}
+
+const RequestList : FC<requestListProps> = ({listType, onClose}) => {
     const classes = useStyles();
     const requestPerPage = 4;
     const [page, setPage] = useState(0);
@@ -25,13 +46,28 @@ const RequestList : FC = () => {
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
+
     return (
         <div className={classes.root}>
-            {
-                requestToShow.map((request, index) =>
-                    <RequestRow {...request}/>
-                )
-            }
+            <img
+                className={classes.exitImage}
+                src={ExitImage}
+                onClick={onClose}
+            />
+            <Table>
+                {
+                    listType === requestListType.my ?
+                        <MyRequestListHeader/> :
+                        <ManagerRequestListHeader/>
+                }
+                {
+                    requestToShow.map((request, index) =>
+                        listType === requestListType.my ?
+                            <MyRequestListRow {...request}/> :
+                            <ManagerRequestListRow {...request} />
+                    )
+                }
+            </Table>
 
             <TablePagination
                 rowsPerPageOptions={[requestPerPage]}

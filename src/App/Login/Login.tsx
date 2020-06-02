@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles({
     root: {
         marginTop: 100,
+        textAlign: 'center',
     },
     image: {
         width: 355,
@@ -19,13 +20,13 @@ const useStyles = makeStyles({
     loginInput: {
         margin: 'auto',
         width: 300,
-        marginTop: 5,
+        marginTop: 20,
     }
 });
 
 
 interface LoginPageProps {
-    setLoggedIn: () => void
+    setLoggedIn: (fullName: string) => void
 }
 
 const LoginPage : FC<LoginPageProps> = ({setLoggedIn}) => {
@@ -35,6 +36,7 @@ const LoginPage : FC<LoginPageProps> = ({setLoggedIn}) => {
 
     const sendLoginRequest = () => {
         setPassword('');
+        setLoggedIn('itamar goldshlager');
     };
 
     return (
@@ -45,6 +47,7 @@ const LoginPage : FC<LoginPageProps> = ({setLoggedIn}) => {
                      alt="Login image"
                      className={classes.image}
                 />
+
                 <div className={classes.loginInput}>
                     <TextField
                         label="user name"
@@ -63,7 +66,7 @@ const LoginPage : FC<LoginPageProps> = ({setLoggedIn}) => {
                         variant={"outlined"}
                         type="password"
                         fullWidth
-                        value={userName}
+                        value={password}
                         onChange={(event: ChangeEvent<HTMLInputElement>) => {
                             setPassword(event.target.value);
                         }}

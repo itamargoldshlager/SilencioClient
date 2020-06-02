@@ -96,7 +96,6 @@ const AddRequest : FC<addRequestProps> = ({onClose, show }) => {
         <Dialog
             TransitionComponent={Transition}
             open={show}
-            onClose={onClose}
         >
             <DialogContent
                 className={classes.root}
@@ -104,6 +103,7 @@ const AddRequest : FC<addRequestProps> = ({onClose, show }) => {
                 <img
                     className={classes.exitImage}
                     src={ExitImage}
+                    onClick={onClose}
                 />
                 <h1 className={classes.title}>Person requests</h1>
                 <Grid container>

@@ -1,4 +1,4 @@
-import React, {FC, Fragment} from 'react';
+import React, {FC, Fragment, useEffect, useState} from 'react';
 import Slide from '@material-ui/core/Slide';
 import { TransitionProps } from '@material-ui/core/transitions';
 import Dialog from '@material-ui/core/Dialog';
@@ -47,9 +47,7 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-interface userDetailsProps {
-    show: boolean,
-    onClose: () => void,
+interface userDetails {
     img: any,
     firstName: string,
     lastName: string,
@@ -59,14 +57,38 @@ interface userDetailsProps {
     endEntrancePermit: Date
 }
 
-const UserDetails : FC<userDetailsProps> = ({onClose, show, img, firstName, lastName, company, phoneNumber,beginEntrancePermit, endEntrancePermit }) => {
+interface userDetailsProps {
+    show: boolean,
+    onClose: () => void,
+}
+
+const initialUserDetails: userDetails = {
+    img: '',
+    beginEntrancePermit: new Date(),
+    endEntrancePermit: new Date(),
+    company: "Silencio",
+    firstName: "Goldshlager",
+    lastName: "Goldshlager",
+    phoneNumber: "052-6533460"
+};
+
+const getUserDetails = (): userDetails => {
+    return initialUserDetails
+};
+
+const UserDetails : FC<userDetailsProps> = ({onClose, show }) => {
     const classes = useStyles();
+
+    let {img, firstName, lastName, company, phoneNumber,beginEntrancePermit, endEntrancePermit} = initialUserDetails;
+
+    useEffect(() => {
+        ({img, firstName, lastName, company, phoneNumber,beginEntrancePermit, endEntrancePermit} = getUserDetails());
+    }, [show]);
+
     return (
         <Dialog
             TransitionComponent={Transition}
             open={show}
-            onClose={onClose}
-            // classes={{paper:classes.dialogPaper}}
         >
             <DialogContent
                 className={classes.root}
@@ -74,6 +96,7 @@ const UserDetails : FC<userDetailsProps> = ({onClose, show, img, firstName, last
                 <img
                     className={classes.exitImage}
                     src={ExitImage}
+                    onClick={onClose}
                 />
                 <Fragment>
                     <h1 className={classes.title}>Information</h1>

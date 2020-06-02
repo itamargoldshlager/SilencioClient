@@ -1,17 +1,19 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import DetailsImage from "./Icons/Details.png"
 import AddRequestImage from "./Icons/AddRequest.png"
 import RequestListImage from "./Icons/RequestList.png"
+import ManagementImage from "./Icons/Management.png"
 
 import Grid from '@material-ui/core/Grid';
 import {Button} from "@material-ui/core";
-import Header from "../Header/Header";
+import {userType} from "../utils/UserType";
+import UserDetails from "../UserDetails/UserDetails";
+import OptionManager, {optionManagerProps} from "./OptionManager";
 
 const useStyles = makeStyles({
     root: {
         marginTop: '5%',
-        width: '60%',
         margin: 'auto'
     },
     header: {
@@ -48,62 +50,159 @@ const useStyles = makeStyles({
     }
 });
 
-interface UserPageProps{
-    name: string,
+interface UserPageProps {
+    loggedInUserType: userType
 }
 
-const UserPage : FC<UserPageProps> = ({name}) => {
+const initialOptionManager: optionManagerProps = {
+    showOption: {
+        showRequestManager: false,
+        showMyRequest: false,
+        showMyDetails: false,
+        showAddRequest: false,
+    },
+    onClose: () => {},
+};
+const UserPage : FC<UserPageProps> = ({loggedInUserType}) => {
+    const [optionManagerBools, setOptionManagerBools] = useState<optionManagerProps>(initialOptionManager);
+
+    useEffect(() =>
+    setOptionManagerBools({
+        ...initialOptionManager,
+        onClose: () => {
+            setOptionManagerBools((prevState:optionManagerProps) => {
+                return {
+                    onClose: prevState.onClose,
+                    showOption: {
+                        showRequestManager: false,
+                        showMyRequest: false,
+                        showMyDetails: false,
+                        showAddRequest: false,
+                    },
+                }
+            })
+        }
+    }), []);
+
+
     const classes = useStyles();
+
     return (
         <div className={classes.root}>
-            <Header title={`Hi, ${name}`}/>
-            <Grid container spacing={4} className={classes.options}>
-                <Grid item xs={4} justify={"center"}>
-                    <div>
-                        <img
-                            className={classes.optionImage}
-                            src={DetailsImage}
-                        />
-                    </div>
-                    <Button
-                        className={classes.optionButton}
-                        color="primary"
-                        variant="contained"
-                    >
-                        My details
-                    </Button>
+            <OptionManager {...optionManagerBools}/>
+            {
+                (!optionManagerBools.showOption.showMyRequest && !optionManagerBools.showOption.showRequestManager) &&
+                <Grid container spacing={4} className={classes.options}>
+                    <Grid item xs>
+                        <div>
+                            <img
+                                className={classes.optionImage}
+                                style={{paddingLeft: 20}}
+                                src={DetailsImage}
+                            />
+                        </div>
+                        <Button
+                            className={classes.optionButton}
+                            color="primary"
+                            variant="contained"
+                            onClick={() => {
+                                setOptionManagerBools((prevState: optionManagerProps) => {
+                                    return {
+                                        onClose: prevState.onClose,
+                                        showOption: {
+                                            ...prevState.showOption,
+                                            showMyDetails: true,
+                                        },
+                                    }
+                                })
+                            }}
+                        >
+                            My details
+                        </Button>
+                    </Grid>
+                    <Grid item xs>
+                        <div>
+                            <img
+                                className={classes.optionImage}
+                                src={AddRequestImage}
+                            />
+                        </div>
+                        <Button
+                            className={classes.optionButton}
+                            color="primary"
+                            variant="contained"
+                            onClick={() => {
+                                setOptionManagerBools((prevState: optionManagerProps) => {
+                                    return {
+                                        onClose: prevState.onClose,
+                                        showOption: {
+                                            ...prevState.showOption,
+                                            showAddRequest: true,
+                                        },
+                                    }
+                                })
+                            }}
+                        >
+                            Add request
+                        </Button>
+                    </Grid>
+                    <Grid item xs>
+                        <div>
+                            <img
+                                className={classes.optionImage}
+                                src={RequestListImage}
+                            />
+                        </div>
+                        <Button
+                            className={classes.optionButton}
+                            color="primary"
+                            variant="contained"
+                            onClick={() => {
+                                setOptionManagerBools((prevState: optionManagerProps) => {
+                                    return {
+                                        onClose: prevState.onClose,
+                                        showOption: {
+                                            ...prevState.showOption,
+                                            showMyRequest: true,
+                                        },
+                                    }
+                                })
+                            }}
+                        >
+                            My requests
+                        </Button>
+                    </Grid>
+                    {
+                        loggedInUserType === userType.manager &&
+                        <Grid item xs>
+                            <div>
+                                <img
+                                    className={classes.optionImage}
+                                    src={ManagementImage}
+                                />
+                            </div>
+                            <Button
+                                className={classes.optionButton}
+                                color="primary"
+                                variant="contained"
+                                onClick={() => {
+                                    setOptionManagerBools((prevState: optionManagerProps) => {
+                                        return {
+                                            onClose: prevState.onClose,
+                                            showOption: {
+                                                ...prevState.showOption,
+                                                showRequestManager: true,
+                                            },
+                                        }
+                                    })
+                                }}
+                            >
+                                Requests Management
+                            </Button>
+                        </Grid>
+                    }
                 </Grid>
-                <Grid item xs={4}>
-                    <div>
-                        <img
-                            className={classes.optionImage}
-                            src={AddRequestImage}
-                        />
-                    </div>
-                    <Button
-                        className={classes.optionButton}
-                        color="primary"
-                        variant="contained"
-                    >
-                        Add request
-                    </Button>
-                </Grid>
-                <Grid item xs={4}>
-                    <div>
-                        <img
-                            className={classes.optionImage}
-                            src={RequestListImage}
-                        />
-                    </div>
-                    <Button
-                        className={classes.optionButton}
-                        color="primary"
-                        variant="contained"
-                    >
-                        My requests
-                    </Button>
-                </Grid>
-            </Grid>
+            }
         </div>
     );
 };
