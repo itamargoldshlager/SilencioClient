@@ -8,16 +8,13 @@ import DateFnsUtils from "@date-io/date-fns";
 import {KeyboardDateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import {makeStyles} from "@material-ui/core/styles";
 import ExitImage from "../utils/exit.png"
+import MyImage from "./MyImage.jpg"
 
 const useStyles = makeStyles({
     root: {
         '& .MuiInputBase-input': {
             color: 'black'
         },
-    },
-    dialogPaper: {
-        minHeight: '80vh',
-        maxHeight: '80vh',
     },
     exitImage: {
         position: 'absolute',
@@ -63,11 +60,11 @@ interface userDetailsProps {
 }
 
 const initialUserDetails: userDetails = {
-    img: '',
-    beginEntrancePermit: new Date(),
-    endEntrancePermit: new Date(),
+    img: MyImage,
+    beginEntrancePermit: new Date(2020,1,1),
+    endEntrancePermit: new Date(2021, 1,1),
     company: "Silencio",
-    firstName: "Goldshlager",
+    firstName: "Itamar",
     lastName: "Goldshlager",
     phoneNumber: "052-6533460"
 };
@@ -89,6 +86,7 @@ const UserDetails : FC<userDetailsProps> = ({onClose, show }) => {
         <Dialog
             TransitionComponent={Transition}
             open={show}
+            onClose={onClose}
         >
             <DialogContent
                 className={classes.root}
@@ -140,7 +138,7 @@ const UserDetails : FC<userDetailsProps> = ({onClose, show }) => {
                                         variant="outlined"
                                         fullWidth
                                         label="phone number"
-                                        value={firstName}
+                                        value={phoneNumber}
                                     />
                                 </Grid>
                             </Grid>
@@ -152,7 +150,7 @@ const UserDetails : FC<userDetailsProps> = ({onClose, show }) => {
                                     fullWidth
                                     disableToolbar
                                     variant="inline"
-                                    format="dd/MM/yyyy mm:HH"
+                                    format="dd/MM/yyyy HH:mm"
                                     margin="normal"
                                     id="date-picker-inline"
                                     label="begin access date"
@@ -171,7 +169,7 @@ const UserDetails : FC<userDetailsProps> = ({onClose, show }) => {
                                     disabled={true}
                                     disableToolbar
                                     variant="inline"
-                                    format="dd/MM/yyyy mm:HH"
+                                    format="dd/MM/yyyy HH:mm"
                                     margin="normal"
                                     id="date-picker-inline"
                                     label="end access date"

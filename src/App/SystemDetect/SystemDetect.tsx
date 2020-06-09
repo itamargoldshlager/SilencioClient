@@ -18,6 +18,7 @@ const useStyles = makeStyles({
 
 const SystemDetect : FC = () => {
     const classes = useStyles();
+    const [openUserPopUp, setOpenUserPopUp] = useState<boolean>(false);
     const personPerPage = 8;
     const [page, setPage] = useState(0);
     const detectsToShow = Detects.slice(page * personPerPage, page * personPerPage + personPerPage);
@@ -31,6 +32,7 @@ const SystemDetect : FC = () => {
     };
     return (
         <div>
+            <UserPopUp show={openUserPopUp} onClose={() => setOpenUserPopUp(false)}/>
             <Filter/>
                 <div className={classes.systemDetect}>
                     <Grid container spacing={5} >
@@ -39,6 +41,12 @@ const SystemDetect : FC = () => {
                                 <PersonBox
                                     key={index}
                                     {...detect}
+                                    onClick={() => {
+                                        setOpenUserPopUp(true);
+                                    }}
+                                    onClose={() => {
+                                        setOpenUserPopUp(false);
+                                    }}
                                 />
                             )
                         }

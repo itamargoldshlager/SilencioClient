@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import UserDetails from "../UserDetails/UserDetails";
-import AddRequest from "./AddRequest";
+import AddRequest from "./AddRequest/AddRequest";
 import RequestList, {requestListType} from "../RequestList/RequestList";
 
 interface showOption {
@@ -19,7 +19,7 @@ const OptionManager : FC<optionManagerProps> = ({showOption, onClose}) => {
     return (
         <div>
             <UserDetails show={showOption.showMyDetails} onClose={onClose}/>
-            <AddRequest show={showOption.showAddRequest} onClose={onClose}/>
+            <AddRequest show={showOption.showAddRequest} onClose={onClose} requestType={requestListType.my}/>
             {
                 showOption.showMyRequest &&
                     <RequestList listType={requestListType.my} onClose={onClose}/>

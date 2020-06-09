@@ -24,12 +24,15 @@ export interface PersonProps {
     detectDate: Date,
     company?: string,
     approve: boolean,
+    onClick?: () => void
+    onClose?: () => void;
 }
 
-const PersonBox : FC<PersonProps> = ({name, img, detectDate, company, approve}) => {
+
+const PersonBox : FC<PersonProps> = ({name, img, detectDate, company, approve, onClick, onClose}) => {
     const classes = useStyles();
     return (
-        <Grid item xs={3}>
+        <Grid item xs={3} onClick={onClick}>
             <img src={img}
                  className={
                      clsx(classes.img,{
