@@ -1,10 +1,12 @@
 import React, {FC} from 'react';
-import {Request, RequestStatus} from "../RequestInterface/RequestInterface";
+import {RequestRow, RequestStatus} from "../RequestInterface/RequestInterface";
 import {TableCell, TableRow} from "@material-ui/core";
 
-const ManagerRequestListRow : FC<Request> = ({requestId, id, firstName, lastName, startDate, endDate, additionalInformation}) => {
+const ManagerRequestListRow : FC<RequestRow> = ({requestId, id, firstName, lastName, startDate, endDate, additionalInformation, onClick = () => {}}) => {
     return (
-        <TableRow>
+        <TableRow
+            onClick={() => onClick}
+        >
             <TableCell>{requestId}</TableCell>
             <TableCell>
                 <div>{additionalInformation?.requestTime.toLocaleTimeString()}</div>

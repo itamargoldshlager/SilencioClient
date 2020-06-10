@@ -1,5 +1,5 @@
 import {makeStyles} from "@material-ui/core/styles";
-import React, {ChangeEvent, FC, useState, Fragment} from "react";
+import React, {ChangeEvent, FC, useState, Fragment, useEffect} from "react";
 import {TransitionProps} from "@material-ui/core/transitions";
 import Slide from "@material-ui/core/Slide";
 import Dialog from "@material-ui/core/Dialog";
@@ -13,6 +13,7 @@ import {KeyboardDateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pick
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import SuccessDialog from "./SuccessDialog";
 import {requestListType} from "../../RequestList/RequestList";
+import {RequestPersonInfo, SendPersonInfo} from "./SendRequestData"
 
 const useStyles = makeStyles({
     root: {
@@ -60,7 +61,7 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-interface request {
+export interface request {
     img: any,
     firstName: string,
     lastName: string,
@@ -72,33 +73,48 @@ interface request {
     information: string,
 }
 
+export const initialState: request = {
+    img: '',
+    firstName: '',
+    lastName: '',
+    mobileNumber: '',
+    reason: '',
+    ID: '',
+    beginEntrancePermit: new Date(),
+    endEntrancePermit: new Date(),
+    information: ''
+};
 
 interface addRequestProps {
     show: boolean,
     onClose: () => void,
     requestType: requestListType
-    requestId?: string,
+    requestId?: string
 }
 
-const AddRequest : FC<addRequestProps> = ({onClose, show }) => {
+const AddRequest : FC<addRequestProps> = ({onClose, show, requestId }) => {
     const classes = useStyles();
 
-    const [newRequest, setNewRequest] = useState<request> (
-        {
-            img: '',
-            firstName: '',
-            lastName: '',
-            mobileNumber: '',
-            reason: '',
-            ID: '',
-            beginEntrancePermit: new Date(),
-            endEntrancePermit: new Date(),
-            information: ''
+    const [newRequest, setNewRequest] = useState<request> (initialState);
+
+    useEffect(() => {
+        if (requestId) {
+            setNewRequest(initialState);
         }
-    );
+    },[requestId]);
     const [showSuccessDialog, setShowSuccessDialog] = useState<boolean>(false);
 
     const sendRequest = () => {
+        const PersonInfo: RequestPersonInfo = newRequest;
+        SendPersonInfo(
+            {
+                firstName: newRequest.firstName,
+                lastName: newRequest.lastName,
+                ID: newRequest.ID,
+                img: newRequest.img,
+                mobileNumber: newRequest.mobileNumber
+            },
+            () => {});
         setShowSuccessDialog(true);
     };
 

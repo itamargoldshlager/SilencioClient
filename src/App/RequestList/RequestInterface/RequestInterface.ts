@@ -10,7 +10,7 @@ export interface ManagerInformation {
     company: string,
 }
 
-export interface Request {
+export interface RequestRow {
     requestId: string,
     firstName: string,
     lastName: string,
@@ -18,5 +18,6 @@ export interface Request {
     startDate: Date,
     endDate: Date,
     status: RequestStatus
-    additionalInformation?: ManagerInformation
+    additionalInformation?: ManagerInformation,
+    onClick?: () => void
 }

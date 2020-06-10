@@ -30,7 +30,7 @@ const Silencio : FC = () => {
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
     const [userFullName, setUserFullName] = useState<string>('');
     const [headerContent, setHeaderContent] = useState<string>('Welcome, Itamar');
-    const [loggedInUserType, setUserType] = useState<userType>(userType.security);
+    const [loggedInUserType, setUserType] = useState<userType>(userType.worker);
 
     const {root, header, body} = useStyles();
     return (

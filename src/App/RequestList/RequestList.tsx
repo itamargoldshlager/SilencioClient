@@ -7,6 +7,7 @@ import MyRequestListRow from "./MyRequestList/MyRequestListRow";
 import ManagerRequestListHeader from "./ManagerRequestList/ManagerRequestListHeader";
 import ManagerRequestListRow from "./ManagerRequestList/ManagerRequestListRow";
 import ExitImage from "../utils/exit.png";
+import AddRequest, {request, initialState} from "../UserPage/AddRequest/AddRequest"
 
 const useStyles = makeStyles({
     root: {
@@ -34,6 +35,8 @@ interface requestListProps {
 
 const RequestList : FC<requestListProps> = ({listType, onClose}) => {
     const classes = useStyles();
+    const [showRequestDialog, setShowRequestDialog] = useState<boolean>(false);
+    const [requestIdToShowInDialog, setRequestIdToShowInDialog] = useState<string>('');
     const requestPerPage = 4;
     const [page, setPage] = useState(0);
     const requestToShow = RequestMock.slice(page * requestPerPage, page * requestPerPage + requestPerPage);
@@ -49,6 +52,12 @@ const RequestList : FC<requestListProps> = ({listType, onClose}) => {
 
     return (
         <div className={classes.root}>
+            <AddRequest
+                show = {showRequestDialog}
+                onClose = {() => setShowRequestDialog(false)}
+                requestType = {requestListType.manager}
+                requestId = {requestIdToShowInDialog}
+            />
             <img
                 className={classes.exitImage}
                 src={ExitImage}
@@ -64,7 +73,12 @@ const RequestList : FC<requestListProps> = ({listType, onClose}) => {
                     requestToShow.map((request, index) =>
                         listType === requestListType.my ?
                             <MyRequestListRow {...request}/> :
-                            <ManagerRequestListRow {...request} />
+                            <ManagerRequestListRow {...request}
+                                onClick={() => {
+                                    setRequestIdToShowInDialog(request.requestId);
+                                    setShowRequestDialog(true);
+                                }}
+                            />
                     )
                 }
             </Table>

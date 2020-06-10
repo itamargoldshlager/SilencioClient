@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {Request, RequestStatus} from "../RequestInterface/RequestInterface";
+import {RequestRow, RequestStatus} from "../RequestInterface/RequestInterface";
 import {makeStyles, TableCell, TableRow} from "@material-ui/core";
 import clsx from 'clsx';
 
@@ -15,7 +15,7 @@ const useStyles = makeStyles({
     }
 });
 
-const MyRequestListRow : FC<Request> = ({requestId, id, firstName, lastName, startDate, endDate, status}) => {
+const MyRequestListRow : FC<RequestRow> = ({requestId, id, firstName, lastName, startDate, endDate, status}) => {
     const {Confirmed, Pending, Rejected} = useStyles();
 
     return (

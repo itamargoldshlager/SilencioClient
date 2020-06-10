@@ -1,6 +1,6 @@
-import {Request, RequestStatus} from "../RequestInterface/RequestInterface"
+import {RequestRow, RequestStatus} from "../RequestInterface/RequestInterface"
 
-const mock: Request[] = [
+const mock: RequestRow[] = [
     {
         firstName: 'Osher',
         lastName: 'Baslo',
