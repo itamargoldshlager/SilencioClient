@@ -1,13 +1,11 @@
-import React, {FC, useState, Fragment, useEffect} from 'react';
+import React, {FC, useState, useEffect} from 'react';
 import Filter from "./Filter";
 import PersonBox from "./PersonBox";
-import Header from "../Header/Header"
 import Footer from "../Footer/Footer";
 import Detects from "./Mock/Persons";
 import {Grid, TablePagination} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import UserPopUp from '../UserDetails/UserDetails';
-import SilencioImage from "../utils/Silencio.png";
+import UserDetails, {userDetailsProps} from '../UserDetails/UserDetails';
 
 const useStyles = makeStyles({
     systemDetect: {
@@ -18,21 +16,35 @@ const useStyles = makeStyles({
 
 const SystemDetect : FC = () => {
     const classes = useStyles();
-    const [openUserPopUp, setOpenUserPopUp] = useState<boolean>(false);
+    const [userDetailsInfo, setUserDetailsInfo] = useState<userDetailsProps>({
+        open: false,
+        onClose: () => {},
+        id: '0',
+    });
+
+    useEffect(() => {
+        setUserDetailsInfo({
+            open: false,
+            id: '0',
+            onClose: () => setUserDetailsInfo((prevState: userDetailsProps) => {
+                return {
+                    ...prevState,
+                    open: false,
+                }
+            })
+        })
+    }, []);
+
     const personPerPage = 8;
     const [page, setPage] = useState(0);
     const detectsToShow = Detects.slice(page * personPerPage, page * personPerPage + personPerPage);
-    let emptyRows = personPerPage - Math.min(personPerPage, Detects.length - page * personPerPage);
-    useEffect(() => {
-        emptyRows = personPerPage - Math.min(personPerPage, Detects.length - page * personPerPage);
-    }, [page]);
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
     return (
         <div>
-            <UserPopUp show={openUserPopUp} onClose={() => setOpenUserPopUp(false)}/>
+            <UserDetails {...userDetailsInfo}/>
             <Filter/>
                 <div className={classes.systemDetect}>
                     <Grid container spacing={5} >
@@ -42,10 +54,21 @@ const SystemDetect : FC = () => {
                                     key={index}
                                     {...detect}
                                     onClick={() => {
-                                        setOpenUserPopUp(true);
+                                        setUserDetailsInfo(prevState => {
+                                            return {
+                                                ...prevState,
+                                                open: true,
+                                                id: detect.id ? detect.id: '0'
+                                            }
+                                        });
                                     }}
                                     onClose={() => {
-                                        setOpenUserPopUp(false);
+                                        setUserDetailsInfo(prevState => {
+                                            return {
+                                                ...prevState,
+                                                open: false,
+                                            }
+                                        });
                                     }}
                                 />
                             )

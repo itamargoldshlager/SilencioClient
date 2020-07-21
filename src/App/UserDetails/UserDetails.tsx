@@ -1,9 +1,9 @@
-import React, {FC, Fragment, useEffect, useState} from 'react';
+import React, {FC, Fragment, useEffect} from 'react';
 import Slide from '@material-ui/core/Slide';
 import { TransitionProps } from '@material-ui/core/transitions';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
-import {Grid, TextField} from '@material-ui/core';
+import {Grid, TextField, Button} from '@material-ui/core';
 import DateFnsUtils from "@date-io/date-fns";
 import {KeyboardDateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import {makeStyles} from "@material-ui/core/styles";
@@ -26,7 +26,7 @@ const useStyles = makeStyles({
     },
     img: {
         maxWidth: 183,
-        minHeight: 226,
+        height: 270,
         float: 'left'
     },
     information: {
@@ -34,6 +34,10 @@ const useStyles = makeStyles({
         '& .MuiGrid-grid-xs-6': {
             padding: 20
         }
+    },
+    actionButton: {
+        width: '100%',
+        height: '100%'
     },
 });
 
@@ -54,9 +58,11 @@ interface userDetails {
     endEntrancePermit: Date
 }
 
-interface userDetailsProps {
-    show: boolean,
+export interface userDetailsProps {
+    open: boolean,
     onClose: () => void,
+    id: string,
+    HR?: boolean
 }
 
 const initialUserDetails: userDetails = {
@@ -73,19 +79,19 @@ const getUserDetails = (): userDetails => {
     return initialUserDetails
 };
 
-const UserDetails : FC<userDetailsProps> = ({onClose, show }) => {
+const UserDetails : FC<userDetailsProps> = ({onClose, open, id, HR = false }) => {
     const classes = useStyles();
 
     let {img, firstName, lastName, company, phoneNumber,beginEntrancePermit, endEntrancePermit} = initialUserDetails;
 
     useEffect(() => {
         ({img, firstName, lastName, company, phoneNumber,beginEntrancePermit, endEntrancePermit} = getUserDetails());
-    }, [show]);
+    }, [id]);
 
     return (
         <Dialog
             TransitionComponent={Transition}
-            open={show}
+            open={open}
             onClose={onClose}
         >
             <DialogContent
@@ -96,7 +102,6 @@ const UserDetails : FC<userDetailsProps> = ({onClose, show }) => {
                     src={ExitImage}
                     onClick={onClose}
                 />
-                <Fragment>
                     <h1 className={classes.title}>Information</h1>
                     <Grid container>
                         <Grid item xs={4}>
@@ -106,10 +111,10 @@ const UserDetails : FC<userDetailsProps> = ({onClose, show }) => {
                             />
                         </Grid>
                         <Grid item xs={8} className={classes.information}>
-                            <Grid container spacing={3}>
+                            <Grid container spacing={2}>
                                 <Grid item xs={6}>
                                     <TextField
-                                        disabled={true}
+                                        disabled={true && !HR}
                                         variant="outlined"
                                         label="first name"
                                         value={firstName}
@@ -139,6 +144,15 @@ const UserDetails : FC<userDetailsProps> = ({onClose, show }) => {
                                         fullWidth
                                         label="phone number"
                                         value={phoneNumber}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <TextField
+                                        disabled={true}
+                                        variant="outlined"
+                                        fullWidth
+                                        label="ID"
+                                        value={id}
                                     />
                                 </Grid>
                             </Grid>
@@ -181,7 +195,6 @@ const UserDetails : FC<userDetailsProps> = ({onClose, show }) => {
                                 />
                             </MuiPickersUtilsProvider>
                         </Grid>
-                        <Grid item xs></Grid>
                         <Grid xs={6}>
                             <TextField
                                 disabled={true}
@@ -191,9 +204,30 @@ const UserDetails : FC<userDetailsProps> = ({onClose, show }) => {
                                 value={firstName}
                             />
                         </Grid>
-                        <Grid item xs></Grid>
+                        {
+                            HR &&
+                            <Fragment>
+                                <Grid xs={3}>
+                                    <Button
+                                        className={classes.actionButton}
+                                        color="primary"
+                                        variant="contained"
+                                    >
+                                        Update
+                                    </Button>
+                                </Grid>
+                                <Grid xs={3}>
+                                    <Button
+                                    className={classes.actionButton}
+                                    color="secondary"
+                                    variant="contained"
+                                    >
+                                        Delete
+                                    </Button>
+                                </Grid>
+                            </Fragment>
+                        }
                     </Grid>
-                </Fragment>
             </DialogContent>
         </Dialog>
     );

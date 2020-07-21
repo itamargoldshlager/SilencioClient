@@ -44,7 +44,7 @@ const LoginPage : FC<LoginPageProps> = ({setLoggedIn}) => {
             <Grid item xs={3}/>
             <Grid item xs={6}>
                 <img src={loginImage}
-                     alt="Login image"
+                     alt="Login"
                      className={classes.image}
                 />
 

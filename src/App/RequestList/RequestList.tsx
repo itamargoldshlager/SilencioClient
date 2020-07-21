@@ -7,7 +7,6 @@ import MyRequestListRow from "./MyRequestList/MyRequestListRow";
 import ManagerRequestListHeader from "./ManagerRequestList/ManagerRequestListHeader";
 import ManagerRequestListRow from "./ManagerRequestList/ManagerRequestListRow";
 import ExitImage from "../utils/exit.png";
-import AddRequest, {request, initialState} from "../UserPage/AddRequest/AddRequest"
 
 const useStyles = makeStyles({
     root: {
@@ -30,21 +29,15 @@ export enum requestListType {
 
 interface requestListProps {
     listType: requestListType
-    onClose:() => void
+    onClose?:() => void
+    onClick?: (requestId: string) => void;
 }
 
-const RequestList : FC<requestListProps> = ({listType, onClose}) => {
+const RequestList : FC<requestListProps> = ({listType, onClose, onClick}) => {
     const classes = useStyles();
-    const [showRequestDialog, setShowRequestDialog] = useState<boolean>(false);
-    const [requestIdToShowInDialog, setRequestIdToShowInDialog] = useState<string>('');
     const requestPerPage = 4;
     const [page, setPage] = useState(0);
     const requestToShow = RequestMock.slice(page * requestPerPage, page * requestPerPage + requestPerPage);
-    let emptyRows = requestPerPage - Math.min(requestPerPage, RequestMock.length - page * requestPerPage);
-
-    useEffect(() => {
-        emptyRows = requestPerPage - Math.min(requestPerPage, RequestMock.length - page * requestPerPage);
-    }, [page]);
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
@@ -52,17 +45,14 @@ const RequestList : FC<requestListProps> = ({listType, onClose}) => {
 
     return (
         <div className={classes.root}>
-            <AddRequest
-                show = {showRequestDialog}
-                onClose = {() => setShowRequestDialog(false)}
-                requestType = {requestListType.manager}
-                requestId = {requestIdToShowInDialog}
-            />
-            <img
-                className={classes.exitImage}
-                src={ExitImage}
-                onClick={onClose}
-            />
+            {
+                onClose &&
+                    <img
+                        className={classes.exitImage}
+                        src={ExitImage}
+                        onClick={onClose}
+                    />
+            }
             <Table>
                 {
                     listType === requestListType.my ?
@@ -74,10 +64,11 @@ const RequestList : FC<requestListProps> = ({listType, onClose}) => {
                         listType === requestListType.my ?
                             <MyRequestListRow {...request}/> :
                             <ManagerRequestListRow {...request}
-                                onClick={() => {
-                                    setRequestIdToShowInDialog(request.requestId);
-                                    setShowRequestDialog(true);
-                                }}
+                                onClick={
+                                    onClick ?
+                                        () => onClick(`${index}`) :
+                                        () => {}
+                                }
                             />
                     )
                 }

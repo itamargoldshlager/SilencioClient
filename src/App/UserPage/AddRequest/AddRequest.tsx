@@ -1,5 +1,5 @@
 import {makeStyles} from "@material-ui/core/styles";
-import React, {ChangeEvent, FC, useState, Fragment, useEffect} from "react";
+import React, {ChangeEvent, FC, Fragment, useEffect, useState} from "react";
 import {TransitionProps} from "@material-ui/core/transitions";
 import Slide from "@material-ui/core/Slide";
 import Dialog from "@material-ui/core/Dialog";
@@ -7,13 +7,15 @@ import DialogContent from "@material-ui/core/DialogContent";
 import ExitImage from "../../utils/exit.png";
 import SendImage from "../../utils/send.png"
 import Grid from "@material-ui/core/Grid";
-import {TextField, Select, MenuItem, InputLabel} from "@material-ui/core";
+import {InputLabel, MenuItem, Select, TextField} from "@material-ui/core";
 import DateFnsUtils from "@date-io/date-fns";
 import {KeyboardDateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
-import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
+import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import SuccessDialog from "./SuccessDialog";
 import {requestListType} from "../../RequestList/RequestList";
-import {RequestPersonInfo, SendPersonInfo} from "./SendRequestData"
+import {RequestPersonInfo} from "./SendRequestData"
+import Confirm from "./Confirm.png"
+import Reject from "./Reject.png"
 
 const useStyles = makeStyles({
     root: {
@@ -50,8 +52,22 @@ const useStyles = makeStyles({
 
     information: {
         textAlign: 'center',
-
     },
+
+    confirmReject: {
+        textAlign: 'unset',
+        width: '100%',
+        height: '50%',
+        '& img': {
+            width: 50,
+            height: 40
+        },
+        '& div': {
+            display: 'inline-block',
+            width: '50%',
+            verticalAlign: 'top'
+        }
+    }
 });
 
 const Transition = React.forwardRef(function Transition(
@@ -61,7 +77,7 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export interface request {
+export interface RequestDialogInformation {
     img: any,
     firstName: string,
     lastName: string,
@@ -73,7 +89,7 @@ export interface request {
     information: string,
 }
 
-export const initialState: request = {
+export const initialState: RequestDialogInformation = {
     img: '',
     firstName: '',
     lastName: '',
@@ -92,29 +108,36 @@ interface addRequestProps {
     requestId?: string
 }
 
-const AddRequest : FC<addRequestProps> = ({onClose, show, requestId }) => {
+const AddRequest : FC<addRequestProps> = ({onClose, show, requestId, requestType }) => {
     const classes = useStyles();
 
-    const [newRequest, setNewRequest] = useState<request> (initialState);
+    const [newRequest, setNewRequest] = useState<RequestDialogInformation> (initialState);
+
+    const [disabled, setDisabled] = useState<boolean>(false);
 
     useEffect(() => {
         if (requestId) {
             setNewRequest(initialState);
+            setDisabled(true);
         }
     },[requestId]);
     const [showSuccessDialog, setShowSuccessDialog] = useState<boolean>(false);
 
     const sendRequest = () => {
         const PersonInfo: RequestPersonInfo = newRequest;
-        SendPersonInfo(
-            {
-                firstName: newRequest.firstName,
-                lastName: newRequest.lastName,
-                ID: newRequest.ID,
-                img: newRequest.img,
-                mobileNumber: newRequest.mobileNumber
-            },
-            () => {});
+        // SendPersonInfo(
+        //     {
+        //         firstName: newRequest.firstName,
+        //         lastName: newRequest.lastName,
+        //         ID: newRequest.ID,
+        //         img: newRequest.img,
+        //         mobileNumber: newRequest.mobileNumber
+        //     },
+        //     () => {});
+        setShowSuccessDialog(true);
+    };
+
+    const confirmRejectRequest = (response: boolean) => {
         setShowSuccessDialog(true);
     };
 
@@ -126,6 +149,7 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId }) => {
                     setShowSuccessDialog(false);
                     onClose();
                 }}
+                requestType={requestType}
             />
             <Dialog
                 onClose={onClose}
@@ -143,23 +167,27 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId }) => {
                     <h1 className={classes.title}>Person requests</h1>
                     <Grid container>
                         <Grid item xs={4} className={classes.personImage}>
-                            <label className={classes.addImageButton}>
-                                <input
-                                    style={{display:"none"}}
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(event: ChangeEvent<any>)=> {
-                                        const newValue = event.target.files[0];
-                                        newValue !== undefined && setNewRequest(prevNewRequest => {
-                                            return {
-                                                ...prevNewRequest,
-                                                img: newValue
-                                            }
-                                        })}
-                                    }
-                                />
-                                Choose Image
-                            </label>
+                            {
+                                !disabled &&
+                                <label className={classes.addImageButton}>
+                                    <input
+                                        style={{display: "none"}}
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(event: ChangeEvent<any>) => {
+                                            const newValue = event.target.files[0];
+                                            newValue !== undefined && setNewRequest(prevNewRequest => {
+                                                return {
+                                                    ...prevNewRequest,
+                                                    img: newValue
+                                                }
+                                            })
+                                        }
+                                        }
+                                    />
+                                    Choose Image
+                                </label>
+                            }
                             {
                                 newRequest.img !== '' &&
                                     <img
@@ -176,6 +204,7 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId }) => {
                             <Grid item xs={6}>
                                 <TextField
                                     fullWidth
+                                    disabled={disabled}
                                     variant="outlined"
                                     label="First Name"
                                     value={newRequest.firstName}
@@ -194,6 +223,7 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId }) => {
                             <Grid item xs={6}>
                                 <TextField
                                     fullWidth
+                                    disabled={disabled}
                                     variant="outlined"
                                     label="Last Name"
                                     value={newRequest.lastName}
@@ -212,6 +242,7 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId }) => {
                             <Grid item xs={6}>
                                 <TextField
                                     fullWidth
+                                    disabled={disabled}
                                     variant="outlined"
                                     label="Company"
                                 />
@@ -219,6 +250,7 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId }) => {
                             <Grid item xs={6}>
                                 <TextField
                                     fullWidth
+                                    disabled={disabled}
                                     variant="outlined"
                                     label="Mobile number"
                                     value={newRequest.mobileNumber}
@@ -238,6 +270,7 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId }) => {
                                 <InputLabel>Reason</InputLabel>
                                 <Select
                                     fullWidth
+                                    disabled={disabled}
                                     value={newRequest.reason}
                                     onChange={
                                         (event: ChangeEvent<any>) => {
@@ -258,6 +291,7 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId }) => {
                             <Grid item xs={6}>
                                 <TextField
                                     fullWidth
+                                    disabled={disabled}
                                     variant="outlined"
                                     label="ID"
                                     value={newRequest.ID}
@@ -278,6 +312,7 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId }) => {
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDateTimePicker
                                     fullWidth
+                                    disabled={disabled}
                                     disableToolbar
                                     variant="inline"
                                     format="dd/MM/yyyy HH:mm"
@@ -305,6 +340,7 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId }) => {
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDateTimePicker
                                     fullWidth
+                                    disabled={disabled}
                                     disableToolbar
                                     variant="inline"
                                     format="dd/MM/yyyy HH:mm"
@@ -331,6 +367,7 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId }) => {
                         <Grid item xs={9}>
                             <TextField
                                 fullWidth
+                                disabled={disabled}
                                 variant="outlined"
                                 label="Request information"
                                 multiline
@@ -348,12 +385,47 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId }) => {
                                 }
                             />
                         </Grid>
-                        <Grid item xs={1}>
-                            <img
-                                onClick={sendRequest}
-                                className={classes.sendImage}
-                                src={SendImage}
-                            />
+                        <Grid item xs={3}>
+                            {
+                                requestType === requestListType.my ?
+                                    <img
+                                        onClick={sendRequest}
+                                        className={classes.sendImage}
+                                        src={SendImage}
+                                    /> :
+                                    <Fragment>
+                                        <button
+                                            className={classes.confirmReject}
+                                            onClick={
+                                                () => confirmRejectRequest(true)
+                                            }
+                                        >
+                                            <div>
+                                                Confirm
+                                            </div>
+                                            <div>
+                                                <img
+                                                    src={Confirm}
+                                                />
+                                            </div>
+                                        </button>
+                                        <button
+                                            className={classes.confirmReject}
+                                            onClick={
+                                                () => confirmRejectRequest(false)
+                                            }
+                                        >
+                                            <div>
+                                                Reject
+                                            </div>
+                                            <div>
+                                                <img
+                                                    src={Reject}
+                                                />
+                                            </div>
+                                        </button>
+                                    </Fragment>
+                            }
                         </Grid>
                     </Grid>
                 </DialogContent>

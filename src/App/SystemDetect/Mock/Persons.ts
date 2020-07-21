@@ -7,7 +7,8 @@ const Detects: PersonProps[] = [
         company: "Silencio",
         name: "Osher Baslo",
         img: Osher,
-        detectDate: new Date()
+        detectDate: new Date(),
+        id: '1',
     },
     {
         approve: false,

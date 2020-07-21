@@ -24,6 +24,7 @@ export interface PersonProps {
     detectDate: Date,
     company?: string,
     approve: boolean,
+    id?: string,
     onClick?: () => void
     onClose?: () => void;
 }
@@ -33,13 +34,15 @@ const PersonBox : FC<PersonProps> = ({name, img, detectDate, company, approve, o
     const classes = useStyles();
     return (
         <Grid item xs={3} onClick={onClick}>
-            <img src={img}
+            <img
+                src={img}
                  className={
                      clsx(classes.img,{
                          [classes.green]: approve,
                          [classes.red]: !approve
                     })
                  }
+                alt="Person"
              />
             <div> {detectDate.toLocaleDateString()} </div>
             {
