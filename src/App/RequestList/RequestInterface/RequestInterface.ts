@@ -1,23 +1,25 @@
 export enum RequestStatus {
-    Confirmed = 'Confirmed',
-    Rejected = 'Rejected',
-    Pending = 'Pending',
+    APPROVED = 'APPROVED',
+    DECLINED = 'DECLINED',
+    OPEN = 'OPEN',
 }
 
 export interface ManagerInformation {
-    requestTime: Date,
+    timestamp: Date,
     requestBy: string,
     company: string,
+    info: string,
+    reason: string
 }
 
 export interface RequestRow {
-    requestId: string,
+    id: string,
     firstName: string,
     lastName: string,
-    id: string,
-    startDate: Date,
-    endDate: Date,
-    status: RequestStatus
+    personId: string,
+    startAccess: Date,
+    endAccess: Date,
+    state: RequestStatus
     additionalInformation?: ManagerInformation,
     onClick?: () => void
 }

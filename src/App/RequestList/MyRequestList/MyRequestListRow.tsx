@@ -15,25 +15,25 @@ const useStyles = makeStyles({
     }
 });
 
-const MyRequestListRow : FC<RequestRow> = ({requestId, id, firstName, lastName, startDate, endDate, status}) => {
+const MyRequestListRow : FC<RequestRow> = ({id, personId, firstName, lastName, startAccess, endAccess, state}) => {
     const {Confirmed, Pending, Rejected} = useStyles();
 
     return (
         <TableRow>
-            <TableCell>{requestId}</TableCell>
             <TableCell>{id}</TableCell>
+            <TableCell>{personId}</TableCell>
             <TableCell>{firstName}</TableCell>
             <TableCell>{lastName}</TableCell>
-            <TableCell>{startDate.toLocaleDateString()}</TableCell>
-            <TableCell>{endDate.toLocaleDateString()}</TableCell>
+            <TableCell>{startAccess.toLocaleDateString()}</TableCell>
+            <TableCell>{endAccess.toLocaleDateString()}</TableCell>
             <TableCell
                 className={clsx({
-                    [Confirmed] : status === RequestStatus.Confirmed,
-                    [Pending] : status === RequestStatus.Pending,
-                    [Rejected]: status === RequestStatus.Rejected
+                    [Confirmed] : state === RequestStatus.APPROVED,
+                    [Pending] : state === RequestStatus.OPEN,
+                    [Rejected]: state === RequestStatus.DECLINED
                 })}
             >
-                {status.toString()}
+                {state.toString()}
             </TableCell>
             <TableCell></TableCell>
         </TableRow>

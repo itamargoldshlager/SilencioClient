@@ -7,6 +7,8 @@ import MyRequestListRow from "./MyRequestList/MyRequestListRow";
 import ManagerRequestListHeader from "./ManagerRequestList/ManagerRequestListHeader";
 import ManagerRequestListRow from "./ManagerRequestList/ManagerRequestListRow";
 import ExitImage from "../utils/exit.png";
+import {fetchManagerRequests, fetchMyRequests} from "./FetchReqeusts/FetchReqeusts";
+import {RequestRow} from "./RequestInterface/RequestInterface";
 
 const useStyles = makeStyles({
     root: {
@@ -37,12 +39,33 @@ const RequestList : FC<requestListProps> = ({listType, onClose, onClick}) => {
     const classes = useStyles();
     const requestPerPage = 4;
     const [page, setPage] = useState(0);
-    const requestToShow = RequestMock.slice(page * requestPerPage, page * requestPerPage + requestPerPage);
+    const [requests, setRequests] = useState<RequestRow[]>([]);
+    // const requestToShow = requests.slice(page * requestPerPage, page * requestPerPage + requestPerPage);
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
 
+    useEffect(() => {
+        // fetchMyRequests(
+        //     "1",
+        //     (request: RequestRow) => {
+        //         setRequests((prevState: RequestRow[]) => {
+        //             return [...prevState, request]
+        //         })
+        //     }
+        // );
+        fetchManagerRequests(
+            (request: RequestRow) => {
+                setRequests((prevState: RequestRow[]) => {
+                    return [...prevState, request]
+                })
+            }
+        );
+        console.log("1");
+    }, []);
+
+    // @ts-ignore
     return (
         <div className={classes.root}>
             {
@@ -60,9 +83,9 @@ const RequestList : FC<requestListProps> = ({listType, onClose, onClick}) => {
                         <ManagerRequestListHeader/>
                 }
                 {
-                    requestToShow.map((request, index) =>
-                        listType === requestListType.my ?
-                            <MyRequestListRow {...request}/> :
+                    requests.map((request: any, index: any) =>
+                        listType === requestListType.my &&
+                            // <MyRequestListRow {...request}/>
                             <ManagerRequestListRow {...request}
                                 onClick={
                                     onClick ?

@@ -2,23 +2,26 @@ import React, {FC} from 'react';
 import {RequestRow} from "../RequestInterface/RequestInterface";
 import {TableCell, TableRow} from "@material-ui/core";
 
-const ManagerRequestListRow : FC<RequestRow> = ({requestId, id, firstName, lastName, startDate, endDate, additionalInformation, onClick = () => {}}) => {
+const ManagerRequestListRow : FC<RequestRow> = ({id, personId, firstName, lastName, startAccess, endAccess, additionalInformation, onClick = () => {}}) => {
     return (
         <TableRow
-            onClick={() => onClick()}
+            onClick={() => {
+                onClick()
+                console.log("clicked")
+            }}
         >
-            <TableCell>{requestId}</TableCell>
+            <TableCell>{id}</TableCell>
             <TableCell>
-                <div>{additionalInformation?.requestTime.toLocaleTimeString()}</div>
-                <div>{additionalInformation?.requestTime.toLocaleDateString()}</div>
+                <div>{additionalInformation?.timestamp.toLocaleTimeString()}</div>
+                <div>{additionalInformation?.timestamp.toLocaleDateString()}</div>
             </TableCell>
             <TableCell>{additionalInformation?.requestBy}</TableCell>
             <TableCell>{additionalInformation?.company}</TableCell>
-            <TableCell>{id}</TableCell>
+            <TableCell>{personId}</TableCell>
             <TableCell>{firstName}</TableCell>
             <TableCell>{lastName}</TableCell>
-            <TableCell>{startDate.toLocaleDateString()}</TableCell>
-            <TableCell>{endDate.toLocaleDateString()}</TableCell>
+            <TableCell>{startAccess.toLocaleDateString()}</TableCell>
+            <TableCell>{endAccess.toLocaleDateString()}</TableCell>
         </TableRow>
     );
 };

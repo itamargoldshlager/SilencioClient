@@ -13,7 +13,7 @@ import {KeyboardDateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pick
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import SuccessDialog from "./SuccessDialog";
 import {requestListType} from "../../RequestList/RequestList";
-import {RequestPersonInfo} from "./SendRequestData"
+import {RequestPersonInfo, SendPersonInfo, SendRequestInfo} from "./SendRequestData"
 import Confirm from "./Confirm.png"
 import Reject from "./Reject.png"
 
@@ -125,16 +125,25 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId, requestType
 
     const sendRequest = () => {
         const PersonInfo: RequestPersonInfo = newRequest;
-        // SendPersonInfo(
-        //     {
-        //         firstName: newRequest.firstName,
-        //         lastName: newRequest.lastName,
-        //         ID: newRequest.ID,
-        //         img: newRequest.img,
-        //         mobileNumber: newRequest.mobileNumber
-        //     },
-        //     () => {});
-        setShowSuccessDialog(true);
+        SendPersonInfo(
+            {
+                firstName: newRequest.firstName,
+                lastName: newRequest.lastName,
+                ID: newRequest.ID,
+                img: newRequest.img,
+                mobileNumber: newRequest.mobileNumber
+            },
+            () => {
+                SendRequestInfo({
+                    issuerId: '1',
+                    startAccess: newRequest.beginEntrancePermit.getTime(),
+                    endAccess: newRequest.endEntrancePermit.getTime(),
+                    personId: newRequest.ID,
+                    reason: newRequest.reason,
+                    info: newRequest.information,
+                });
+            });
+        // setShowSuccessDialog(true);
     };
 
     const confirmRejectRequest = (response: boolean) => {

@@ -27,6 +27,22 @@ const readFileDataAsBase64 = (image: File) => {
     });
 };
 
+export const SendRequestInfo = (requestInfo: {
+    personId: string,
+    issuerId: string,
+    startAccess: number,
+    endAccess: number,
+    reason: string,
+    info: string,
+}): void =>{
+    axios.post(
+        address + "/permits",
+        requestInfo,
+    ).then(value => {
+        console.log(value)
+    });
+};
+
 export const SendPersonInfo = (person: RequestPersonInfo, callback: () => void): void => {
     const formData = new FormData();
 
@@ -41,9 +57,8 @@ export const SendPersonInfo = (person: RequestPersonInfo, callback: () => void):
         method: 'post',
         body: formData
     }).then(res => {
-        if(res.ok) {
-            alert("File uploaded successfully.")
-        }
+        console.log(res);
+        callback();
     });
 
     // const data = new FormData();
