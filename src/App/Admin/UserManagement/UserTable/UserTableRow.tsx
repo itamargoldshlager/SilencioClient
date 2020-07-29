@@ -12,27 +12,29 @@ const useStyles = makeStyles({
 });
 
 export interface UserRowProps {
-    id: string,
-    userName: string,
+    id?: string,
+    username: string,
+    personId: string,
     email: string,
-    groups: string[]
-    onDelete?: () => void;
-    onEdit?: () => void;
+    role: string,
+    password: string,
+    onDelete?: () => void,
+    onEdit?: () => void,
 }
 
-const UserTableRow : FC<UserRowProps> = ({id, userName, email, groups, onDelete, onEdit}) => {
+const UserTableRow : FC<UserRowProps> = ({id, username, personId,email , role, onDelete, onEdit}) => {
     const classes = useStyles();
 
     return (
         <TableRow style={{height: 62}}>
             <TableCell>
                 {
-                    id
+                    personId
                 }
             </TableCell>
             <TableCell>
                 {
-                    userName
+                    username
                 }
             </TableCell>
             <TableCell>
@@ -42,7 +44,7 @@ const UserTableRow : FC<UserRowProps> = ({id, userName, email, groups, onDelete,
             </TableCell>
             <TableCell>
                 {
-                    groups.join(',').toString()
+                    role
                 }
             </TableCell>
             <TableCell>

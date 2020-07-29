@@ -1,11 +1,12 @@
-import React, {FC, useState} from 'react';
-import Persons from "./PersonTable/Mock/Mock"
+import React, {FC, useEffect, useState} from 'react';
 import PersonTableHeader from "./PersonTable/PersonTableHeader";
 import PersonTableRow from "./PersonTable/PersonTableRow";
 import Table from '@material-ui/core/Table';
 import {makeStyles} from "@material-ui/core/styles";
 import {TablePagination} from "@material-ui/core";
 import UserDetails from "../../UserDetails/UserDetails"
+import {fetchPersons} from "./FetchPersons";
+import {PersonProps} from "./PersonTable/PersonTableRow";
 
 const useStyles = makeStyles({
     root: {
@@ -17,6 +18,7 @@ const useStyles = makeStyles({
 
 const PersonManagement : FC = () => {
     const classes = useStyles();
+    const [persons, setPersons] = useState<PersonProps[]>([]);
 
     const [userDetails, setUserDetails] = useState<{
         open: boolean,
@@ -28,11 +30,17 @@ const PersonManagement : FC = () => {
 
     const personPerPage = 4;
     const [page, setPage] = useState(0);
-    const requestToShow = Persons.slice(page * personPerPage, page * personPerPage + personPerPage);
+    const requestToShow = persons.slice(page * personPerPage, page * personPerPage + personPerPage);
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
+
+    useEffect(() =>
+        fetchPersons(value => {
+            setPersons(value);
+        })
+    , []);
 
     return (
         <div>
@@ -55,7 +63,7 @@ const PersonManagement : FC = () => {
                             onClick={() =>
                                 setUserDetails({
                                     open: true,
-                                    id: person.id
+                                    id: person.personId
                                 })
                             }
                         />
@@ -67,7 +75,7 @@ const PersonManagement : FC = () => {
             <TablePagination
                 rowsPerPageOptions={[personPerPage]}
                 colSpan={3}
-                count={Persons.length}
+                count={persons.length}
                 rowsPerPage={personPerPage}
                 page={page}
                 SelectProps={{

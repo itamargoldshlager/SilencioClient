@@ -16,6 +16,7 @@ import {requestListType} from "../../RequestList/RequestList";
 import {RequestPersonInfo, SendPersonInfo, SendRequestInfo} from "./SendRequestData"
 import Confirm from "./Confirm.png"
 import Reject from "./Reject.png"
+import {updateRequestState} from "./UpdateRequestState"
 
 const useStyles = makeStyles({
     root: {
@@ -106,12 +107,13 @@ interface addRequestProps {
     onClose: () => void,
     requestType: requestListType
     requestId?: string
+    personId?: string
 }
 
-const AddRequest : FC<addRequestProps> = ({onClose, show, requestId, requestType }) => {
+const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType, personId}) => {
     const classes = useStyles();
 
-    const [newRequest, setNewRequest] = useState<RequestDialogInformation> (initialState);
+    const [newRequest, setNewRequest] = useState<RequestDialogInformation>(initialState);
 
     const [disabled, setDisabled] = useState<boolean>(false);
 
@@ -120,7 +122,7 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId, requestType
             setNewRequest(initialState);
             setDisabled(true);
         }
-    },[requestId]);
+    }, [requestId]);
     const [showSuccessDialog, setShowSuccessDialog] = useState<boolean>(false);
 
     const sendRequest = () => {
@@ -146,8 +148,16 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId, requestType
         // setShowSuccessDialog(true);
     };
 
-    const confirmRejectRequest = (response: boolean) => {
-        setShowSuccessDialog(true);
+    const confirmRejectRequest = (confirmReject: boolean) => {
+        // /state/{personId} post
+        // data : {
+        // permitId: string
+        // state: APPROVED/ DECLINED
+        // }
+        if (requestId && personId) {
+            updateRequestState(personId, confirmReject, requestId);
+            setShowSuccessDialog(true);
+        }
     };
 
     return (
@@ -199,14 +209,14 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId, requestType
                             }
                             {
                                 newRequest.img !== '' &&
-                                    <img
-                                        src={URL.createObjectURL(newRequest.img)}
-                                        alt="product"
-                                         style={{
-                                             width: '100%',
-                                             height: '100%'
-                                         }}
-                                    />
+                                <img
+                                    src={URL.createObjectURL(newRequest.img)}
+                                    alt="product"
+                                    style={{
+                                        width: '100%',
+                                        height: '100%'
+                                    }}
+                                />
                             }
                         </Grid>
                         <Grid container xs={8}>
@@ -225,7 +235,8 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId, requestType
                                                     ...prevNewRequest,
                                                     firstName: newValue
                                                 }
-                                            })}
+                                            })
+                                        }
                                     }
                                 />
                             </Grid>
@@ -244,7 +255,8 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId, requestType
                                                     ...prevNewRequest,
                                                     lastName: newValue
                                                 }
-                                            })}
+                                            })
+                                        }
                                     }
                                 />
                             </Grid>
@@ -271,7 +283,8 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId, requestType
                                                     ...prevNewRequest,
                                                     mobileNumber: newValue
                                                 }
-                                            })}
+                                            })
+                                        }
                                     }
                                 />
                             </Grid>
@@ -289,7 +302,8 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId, requestType
                                                     ...prevNewRequest,
                                                     reason: newValue
                                                 }
-                                        })}
+                                            })
+                                        }
                                     }
                                 >
                                     <MenuItem value="Guest">Guest</MenuItem>
@@ -312,7 +326,8 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId, requestType
                                                     ...prevNewRequest,
                                                     ID: newValue
                                                 }
-                                            })}
+                                            })
+                                        }
                                     }
                                 />
                             </Grid>
@@ -337,7 +352,8 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId, requestType
                                                     ...prevNewRequest,
                                                     beginEntrancePermit: newValue
                                                 }
-                                            })}
+                                            })
+                                        }
                                     }
                                     KeyboardButtonProps={{
                                         'aria-label': 'change date',
@@ -365,7 +381,8 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId, requestType
                                                     ...prevNewRequest,
                                                     endEntrancePermit: newValue
                                                 }
-                                            })}
+                                            })
+                                        }
                                     }
                                     KeyboardButtonProps={{
                                         'aria-label': 'change date',
@@ -390,7 +407,8 @@ const AddRequest : FC<addRequestProps> = ({onClose, show, requestId, requestType
                                                 ...prevNewRequest,
                                                 information: newValue
                                             }
-                                        })}
+                                        })
+                                    }
                                 }
                             />
                         </Grid>

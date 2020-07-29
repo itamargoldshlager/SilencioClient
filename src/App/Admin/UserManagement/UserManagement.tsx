@@ -1,12 +1,14 @@
 import React, {FC, useEffect, useState} from 'react';
 import Users from "./Mock/UserMock"
-import UserTableRow from './UserTable/UserTableRow';
+import UserTableRow, {UserRowProps} from './UserTable/UserTableRow';
 import {Table, TablePagination, TableCell, TableRow, TableContainer, Paper} from '@material-ui/core';
 import UserTableHeader from './UserTable/UserTableHeader';
 import {makeStyles} from "@material-ui/core/styles";
 import RemoveUserDialog, { RemoveUserDialogProps } from "./RemoveUserDialog/RemoveUserDialog";
 import UserTableFilter from "./UserTable/UserTableFilter";
 import EditUserDialog, { EditUserDialogProps } from "./EditUserDialog/EditUserDialog";
+import {createUser} from "./CreateUser/CreateUser";
+import {fetchUsers} from "./FetchUsers/FetchUsers";
 
 const useStyles = makeStyles({
     root: {
@@ -19,6 +21,18 @@ const deleteUser = (userId: string) => {
 };
 
 const UserManagement : FC = () => {
+    const [users, setUsers] = useState<UserRowProps[]>([]);
+
+    useEffect(() => {
+        fetchUsers((data) => setUsers(data));
+        // createUser({
+        //     email: 'itamar@gmail',
+        //     password: '1',
+        //     personId: '1234',
+        //     role: 'MANAGER',
+        //     username: 'itagold'
+        // })
+    }, []);
     const classes = useStyles();
 
     const [searchBy, setSearchBy] = useState<string>('');
@@ -87,16 +101,16 @@ const UserManagement : FC = () => {
                 <Table>
                     <UserTableHeader/>
                     {
-                        userToShow.map(user =>
+                        users.map(user =>
                             <UserTableRow
                                 {...user}
                                 onDelete={() =>
                                     setRemoveDeleteInfo((prevState: RemoveUserDialogProps) => {
                                         return {
                                             ...prevState,
-                                            userName: user.userName,
+                                            userName: user.username,
                                             open: true,
-                                            onDelete: () => deleteUser(user.id)
+                                            onDelete: () => deleteUser(user.id ? user.id : '0')
                                         }
                                     })
                                 }
@@ -104,7 +118,7 @@ const UserManagement : FC = () => {
                                     setEditDialogInfo((prevState: EditUserDialogProps) => {
                                         return {
                                             ...prevState,
-                                            userId: user.id,
+                                            userId: user.id ? user.id : '0',
                                             open: true
                                         }
                                     })

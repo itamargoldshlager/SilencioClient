@@ -7,10 +7,12 @@ import PersonManagement from "./PersonManagement/PersonManagement"
 
 const HumanResource : FC = () => {
     const [managerRequestInfo, setManagerRequestInfo] = useState<{
+        personId: string,
         requestId: string,
         show: boolean,
     }>({
         requestId: '0',
+        personId: '0',
         show: false
     });
 
@@ -22,9 +24,10 @@ const HumanResource : FC = () => {
         persons: false
     });
 
-    const setRequestId = (requestId: string) => {
+    const setRequestId = (requestId: string, personId: string) => {
         setManagerRequestInfo({
             requestId,
+            personId,
             show: true
         })
     };
@@ -32,6 +35,7 @@ const HumanResource : FC = () => {
     const closeManagerRequestDialog = () => {
         setManagerRequestInfo({
             requestId: '0',
+            personId: '0',
             show: false
         })
     };
@@ -40,7 +44,7 @@ const HumanResource : FC = () => {
         <Fragment>
             {
                 managerRequestInfo.show &&
-                <AddRequest show={managerRequestInfo.show} onClose={closeManagerRequestDialog} requestType={requestListType.manager} requestId={managerRequestInfo.requestId}/>
+                <AddRequest show={managerRequestInfo.show} onClose={closeManagerRequestDialog} requestType={requestListType.manager} requestId={managerRequestInfo.requestId} personId={managerRequestInfo.personId}/>
             }
             <Grid container spacing={2}>
                 <Grid item xs={4}/>

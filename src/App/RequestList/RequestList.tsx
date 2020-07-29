@@ -32,7 +32,7 @@ export enum requestListType {
 interface requestListProps {
     listType: requestListType
     onClose?:() => void
-    onClick?: (requestId: string) => void;
+    onClick?: (requestId: string, personId: string) => void;
 }
 
 const RequestList : FC<requestListProps> = ({listType, onClose, onClick}) => {
@@ -47,23 +47,20 @@ const RequestList : FC<requestListProps> = ({listType, onClose, onClick}) => {
     };
 
     useEffect(() => {
-        // fetchMyRequests(
-        //     "1",
-        //     (request: RequestRow) => {
-        //         setRequests((prevState: RequestRow[]) => {
-        //             return [...prevState, request]
-        //         })
-        //     }
-        // );
-        fetchManagerRequests(
-            (request: RequestRow) => {
-                setRequests((prevState: RequestRow[]) => {
-                    return [...prevState, request]
-                })
-            }
-        );
-        console.log("1");
-    }, []);
+        const callback = (request: RequestRow) => {
+            setRequests((prevState: RequestRow[]) => {
+                return [...prevState, request]
+            })
+        };
+
+        if (listType === requestListType.my)
+            fetchMyRequests(
+                "1",
+                callback
+            );
+        else
+            fetchManagerRequests(callback)
+    }, [listType])
 
     // @ts-ignore
     return (
@@ -84,12 +81,12 @@ const RequestList : FC<requestListProps> = ({listType, onClose, onClick}) => {
                 }
                 {
                     requests.map((request: any, index: any) =>
-                        listType === requestListType.my &&
-                            // <MyRequestListRow {...request}/>
+                        listType === requestListType.my ?
+                            <MyRequestListRow {...request}/> :
                             <ManagerRequestListRow {...request}
                                 onClick={
                                     onClick ?
-                                        () => onClick(`${index}`) :
+                                        () => onClick(`${request.id}`, request.personId) :
                                         () => {}
                                 }
                             />

@@ -2,22 +2,35 @@ import React, {FC} from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
-export interface PersonProps {
+interface Permit {
     id: string,
+    personId: string,
+    issuerId: string,
+    startAccess: number,
+    endAccess: number,
+    reason: string,
+    info: string,
+    timestamp: number,
+    state: string
+}
+
+export interface PersonProps {
+    personId: string,
     firstName: string,
     lastName: string,
-    start: Date,
-    end: Date,
+    companyId: string,
+    phone: string,
+    permits: Permit[]
     onClick?: () => void,
 }
 
-const PersonTableRow : FC<PersonProps> = ({id, firstName, lastName, end, start, onClick}) => {
+const PersonTableRow : FC<PersonProps> = ({personId, firstName, lastName, permits, onClick}) => {
     return (
         <TableRow
             onClick={onClick}
         >
             <TableCell>
-                {id}
+                {personId}
             </TableCell>
             <TableCell>
                 {firstName}
@@ -26,10 +39,14 @@ const PersonTableRow : FC<PersonProps> = ({id, firstName, lastName, end, start, 
                 {lastName}
             </TableCell>
             <TableCell>
-                {start.toLocaleDateString()}
+                {
+                    new Date(permits[permits.length - 1].startAccess).toLocaleDateString()
+                }
             </TableCell>
             <TableCell>
-                {end.toLocaleDateString()}
+                {
+                    new Date(permits[permits.length - 1].endAccess).toLocaleDateString()
+                }
             </TableCell>
         </TableRow>
     );
