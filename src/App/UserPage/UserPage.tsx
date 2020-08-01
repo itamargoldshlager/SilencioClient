@@ -173,7 +173,7 @@ const UserPage : FC<UserPageProps> = ({loggedInUserType}) => {
                         </Button>
                     </Grid>
                     {
-                        (loggedInUserType !== userType.worker) &&
+                        (loggedInUserType !== userType.USER) &&
                             <Fragment>
                                 <Grid item xs>
                                     <div>
@@ -202,7 +202,7 @@ const UserPage : FC<UserPageProps> = ({loggedInUserType}) => {
                                     </Button>
                                 </Grid>
                                 {
-                                    loggedInUserType === userType.manager &&
+                                    loggedInUserType === userType.MANAGER &&
                                         <Grid item xs>
                                             <div>
                                                 <img

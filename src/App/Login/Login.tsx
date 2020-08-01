@@ -3,6 +3,8 @@ import loginImage from '../utils/Silencio.png'
 import Grid from '@material-ui/core/Grid';
 import {Button, TextField} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import {sendLoginRequest} from "./SendLoginRequest"
+import {userType} from "../utils/UserType";
 
 const useStyles = makeStyles({
     root: {
@@ -27,16 +29,23 @@ const useStyles = makeStyles({
 
 interface LoginPageProps {
     setLoggedIn: (fullName: string) => void
+    setLoggedInType: (type: userType) => void
 }
 
-const LoginPage : FC<LoginPageProps> = ({setLoggedIn}) => {
+const LoginPage : FC<LoginPageProps> = ({setLoggedIn, setLoggedInType}) => {
     const classes = useStyles();
     const [userName, setUserName] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
-    const sendLoginRequest = () => {
-        setPassword('');
-        setLoggedIn('itamar goldshlager');
+    const handleLoginRequestResult = (result: string) => {
+        console.log(result);
+        if (result === 'UNAUTHORIZED') {
+            window.alert("no!!!");
+            setPassword('');
+        } else {
+            setLoggedInType(result as userType);
+            setLoggedIn(userName);
+        }
     };
 
     return (
@@ -77,7 +86,9 @@ const LoginPage : FC<LoginPageProps> = ({setLoggedIn}) => {
                     variant="contained"
                     color="primary"
                     className={classes.loginButton}
-                    onClick={sendLoginRequest}
+                    onClick={() =>
+                        sendLoginRequest(userName, password, handleLoginRequestResult)
+                    }
                 >
                     Login
                 </Button>

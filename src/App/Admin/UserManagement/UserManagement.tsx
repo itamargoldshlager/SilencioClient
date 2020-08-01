@@ -1,14 +1,15 @@
 import React, {FC, useEffect, useState} from 'react';
 import Users from "./Mock/UserMock"
 import UserTableRow, {UserRowProps} from './UserTable/UserTableRow';
-import {Table, TablePagination, TableCell, TableRow, TableContainer, Paper} from '@material-ui/core';
+import {Paper, Table, TableCell, TableContainer, TablePagination, TableRow} from '@material-ui/core';
 import UserTableHeader from './UserTable/UserTableHeader';
 import {makeStyles} from "@material-ui/core/styles";
-import RemoveUserDialog, { RemoveUserDialogProps } from "./RemoveUserDialog/RemoveUserDialog";
+import RemoveUserDialog, {RemoveUserDialogProps} from "./RemoveUserDialog/RemoveUserDialog";
 import UserTableFilter from "./UserTable/UserTableFilter";
-import EditUserDialog, { EditUserDialogProps } from "./EditUserDialog/EditUserDialog";
-import {createUser} from "./CreateUser/CreateUser";
+import EditUserDialog, {EditUserDialogProps} from "./EditUserDialog/EditUserDialog";
 import {fetchUsers} from "./FetchUsers/FetchUsers";
+import {deleteUser} from "./DeleteUser/DeleteUser";
+import {userType} from "../../utils/UserType";
 
 const useStyles = makeStyles({
     root: {
@@ -16,12 +17,12 @@ const useStyles = makeStyles({
     },
 });
 
-const deleteUser = (userId: string) => {
-
-};
-
 const UserManagement : FC = () => {
     const [users, setUsers] = useState<UserRowProps[]>([]);
+
+    const removeUserFormList = (username: string): void => {
+      setUsers(users.filter(user => user.username !== username));
+    };
 
     useEffect(() => {
         fetchUsers((data) => setUsers(data));
@@ -63,6 +64,7 @@ const UserManagement : FC = () => {
         onClose: () => {},
         open: false,
         userId: '1',
+        type: userType.USER,
     });
 
     useEffect(() => {
@@ -89,8 +91,12 @@ const UserManagement : FC = () => {
 
     return (
         <div className={classes.root}>
-            <RemoveUserDialog {...removeDialogInfo}/>
-            <EditUserDialog {...editDialogInfo}/>
+            {
+                removeDialogInfo.open && <RemoveUserDialog {...removeDialogInfo}/>
+            }
+            {
+                editDialogInfo.open && <EditUserDialog {...editDialogInfo}/>
+            }
             <UserTableFilter
                 searchBy={searchBy}
                 setSearchBy={
@@ -110,7 +116,7 @@ const UserManagement : FC = () => {
                                             ...prevState,
                                             userName: user.username,
                                             open: true,
-                                            onDelete: () => deleteUser(user.id ? user.id : '0')
+                                            onDelete: () => deleteUser(user.username , () => removeUserFormList(user.username))
                                         }
                                     })
                                 }
@@ -119,6 +125,7 @@ const UserManagement : FC = () => {
                                         return {
                                             ...prevState,
                                             userId: user.id ? user.id : '0',
+                                            type: user.role,
                                             open: true
                                         }
                                     })
