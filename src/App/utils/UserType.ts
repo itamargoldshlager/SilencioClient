@@ -1,6 +1,6 @@
 export enum userType {
-    security,
-    HumanResource,
-    manager,
-    worker
+    SECURITY= 'SECURITY',
+    HR = 'HR',
+    MANAGER = 'MANAGER',
+    USER = 'USER'
 }

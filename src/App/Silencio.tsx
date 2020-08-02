@@ -30,7 +30,7 @@ const Silencio : FC = () => {
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
     const [userFullName, setUserFullName] = useState<string>('');
     const [headerContent, setHeaderContent] = useState<string>('Welcome, Itamar');
-    const [loggedInUserType, setUserType] = useState<userType>(userType.manager);
+    const [loggedInUserType, setUserType] = useState<userType>(userType.MANAGER);
 
     const {root, header, body} = useStyles();
     return (
@@ -42,16 +42,19 @@ const Silencio : FC = () => {
                     <Fragment>
                         <Header title={headerContent}/>
                         {
-                            loggedInUserType === userType.security ?
+                            loggedInUserType === userType.SECURITY ?
                                 <SystemDetect/> :
                                 <UserPage loggedInUserType={loggedInUserType}/>
                         }
                         <Footer/>
                     </Fragment> :
-                    <LoginPage setLoggedIn={(fullName: string) => {
-                        setLoggedIn(true);
-                        setUserFullName(fullName);
-                    }}/>
+                    <LoginPage
+                        setLoggedIn={(fullName: string) => {
+                            setLoggedIn(true);
+                            setUserFullName(fullName);
+                        }}
+                        setLoggedInType={setUserType}
+                    />
             }
             </Grid>
         </Grid>
