@@ -2,6 +2,7 @@ import React, {FC, Fragment} from 'react';
 import { Grid } from '@material-ui/core';
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from 'clsx';
+import {detectionEvent} from "./interfaces/interface";
 
 const useStyles = makeStyles({
     img: {
@@ -18,38 +19,31 @@ const useStyles = makeStyles({
     }
 });
 
-export interface PersonProps {
-    name?: string,
-    img: any,
-    detectDate: Date,
-    company?: string,
-    approve: boolean,
-    id?: string,
+export interface PersonProps extends detectionEvent{
     onClick?: () => void
     onClose?: () => void;
 }
 
 
-const PersonBox : FC<PersonProps> = ({name, img, detectDate, company, approve, onClick, onClose}) => {
+const PersonBox : FC<PersonProps> = ({personId, timestamp, imageUrl, indication ,onClick, onClose}) => {
     const classes = useStyles();
     return (
         <Grid item xs={3} onClick={onClick}>
             <img
-                src={img}
+                src={imageUrl}
                  className={
                      clsx(classes.img,{
-                         [classes.green]: approve,
-                         [classes.red]: !approve
+                         [classes.green]: indication === 'GREEN',
+                         [classes.red]: indication === 'RED'
                     })
                  }
                 alt="Person"
              />
-            <div> {detectDate.toLocaleDateString()} </div>
+            <div> {new Date(timestamp).toLocaleDateString()} </div>
             {
-                approve &&
+                indication === 'GREEN' &&
                     <Fragment>
-                        <div>{name}</div>
-                        <div>company: {company}</div>
+                        <div>{personId}</div>
                     </Fragment>
             }
         </Grid>

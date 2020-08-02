@@ -2,10 +2,11 @@ import React, {FC, useState, useEffect} from 'react';
 import Filter from "./Filter";
 import PersonBox from "./PersonBox";
 import Footer from "../Footer/Footer";
-import Detects from "./Mock/Persons";
 import {Grid, TablePagination} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import UserDetails, {userDetailsProps} from '../UserDetails/UserDetails';
+import {detectionEvent} from "./interfaces/interface";
+import {fetchInitialState} from "./ServerConnection/FetchInitialState";
 
 const useStyles = makeStyles({
     systemDetect: {
@@ -16,6 +17,10 @@ const useStyles = makeStyles({
 
 const SystemDetect : FC = () => {
     const classes = useStyles();
+
+    const [detects, setDetects] = useState<detectionEvent[]>([]);
+
+    fetchInitialState(setDetects);
     const [userDetailsInfo, setUserDetailsInfo] = useState<userDetailsProps>({
         open: false,
         onClose: () => {},
@@ -37,7 +42,7 @@ const SystemDetect : FC = () => {
 
     const personPerPage = 8;
     const [page, setPage] = useState(0);
-    const detectsToShow = Detects.slice(page * personPerPage, page * personPerPage + personPerPage);
+    const detectsToShow = detects.slice(page * personPerPage, page * personPerPage + personPerPage);
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
@@ -58,7 +63,7 @@ const SystemDetect : FC = () => {
                                             return {
                                                 ...prevState,
                                                 open: true,
-                                                id: detect.id ? detect.id: '0'
+                                                id: detect.personId ? detect.personId : '0'
                                             }
                                         });
                                     }}
@@ -77,7 +82,7 @@ const SystemDetect : FC = () => {
                     <TablePagination
                         rowsPerPageOptions={[8]}
                         colSpan={3}
-                        count={Detects.length}
+                        count={detects.length}
                         rowsPerPage={8}
                         page={page}
                         SelectProps={{
