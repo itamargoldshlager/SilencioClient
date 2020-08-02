@@ -2,7 +2,7 @@ import React, {FC, Fragment} from 'react';
 import { Grid } from '@material-ui/core';
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from 'clsx';
-import {detectionEvent} from "./interfaces/interface";
+import {detectionEvent, s3Bucket} from "./interfaces/interface";
 
 const useStyles = makeStyles({
     img: {
@@ -30,7 +30,7 @@ const PersonBox : FC<PersonProps> = ({personId, timestamp, imageUrl, indication 
     return (
         <Grid item xs={3} onClick={onClick}>
             <img
-                src={imageUrl}
+                src={`${s3Bucket}${imageUrl}`}
                  className={
                      clsx(classes.img,{
                          [classes.green]: indication === 'GREEN',

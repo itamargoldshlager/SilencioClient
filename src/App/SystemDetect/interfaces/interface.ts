@@ -6,4 +6,4 @@ export interface detectionEvent {
     cameraId: string
 }
 
-export const s3Bucket = "TODO";
+export const s3Bucket = "https://silencio-persons.s3.eu-central-1.amazonaws.com/";

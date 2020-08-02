@@ -7,6 +7,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import UserDetails, {userDetailsProps} from '../UserDetails/UserDetails';
 import {detectionEvent} from "./interfaces/interface";
 import {fetchInitialState} from "./ServerConnection/FetchInitialState";
+import {address} from "../utils/ServerConf";
+import {serverSendEventHandler} from "./ServerConnection/ServerSentEvent";
 
 const useStyles = makeStyles({
     systemDetect: {
@@ -15,12 +17,39 @@ const useStyles = makeStyles({
     }
 });
 
+
+const useEventSource = (url: string) => {
+    const [data, updateData] = useState(null);
+
+    useEffect(() => {
+        const source = new EventSource(url);
+
+        // source.onmessage = function logEvents(event) {
+        //     console.log(event.data);
+        //     updateData(JSON.parse(event.data));
+        // }
+
+        source.addEventListener("Detection", ((evt:any) => {
+            console.log(JSON.parse(evt.data));
+        }))
+    }, []);
+
+    return data;
+};
+
 const SystemDetect : FC = () => {
     const classes = useStyles();
-
+    // const data = useEventSource(address + "gate/updates");
     const [detects, setDetects] = useState<detectionEvent[]>([]);
-
-    fetchInitialState(setDetects);
+    const detectByOrder = detects.sort((a, b) => b.timestamp - a.timestamp);
+    useEffect(() => {
+        fetchInitialState(setDetects);
+        serverSendEventHandler((event: detectionEvent) => {
+            setDetects((prevState: detectionEvent[]) => {
+                return [event, ...prevState]
+            })
+        })
+    }, []);
     const [userDetailsInfo, setUserDetailsInfo] = useState<userDetailsProps>({
         open: false,
         onClose: () => {},
@@ -42,7 +71,7 @@ const SystemDetect : FC = () => {
 
     const personPerPage = 8;
     const [page, setPage] = useState(0);
-    const detectsToShow = detects.slice(page * personPerPage, page * personPerPage + personPerPage);
+    const detectsToShow = detectByOrder.slice(page * personPerPage, page * personPerPage + personPerPage);
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
@@ -92,7 +121,7 @@ const SystemDetect : FC = () => {
                         onChangePage={handleChangePage}
                     />
                 </div>
-            <Footer/>
+            {/*<Footer/>*/}
         </div>
     );
 };
