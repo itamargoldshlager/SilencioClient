@@ -18,6 +18,7 @@ interface showOption {
 export interface optionManagerProps {
     showOption: showOption
     onClose: () => void,
+    userId: string,
 }
 
 const useStyles = makeStyles({
@@ -31,19 +32,22 @@ const useStyles = makeStyles({
     },
 });
 
-const OptionManager : FC<optionManagerProps> = ({showOption, onClose}) => {
+const OptionManager : FC<optionManagerProps> = ({showOption, onClose, userId}) => {
     const classes = useStyles();
 
     return (
         <div>
-            <UserDetails open={showOption.showMyDetails} onClose={onClose} id={'2'}/>
+            {
+                showOption.showMyDetails &&
+                    <UserDetails open={showOption.showMyDetails} onClose={onClose} id={userId}/>
+            }
             {
                 showOption.showAddRequest &&
                     <AddRequest show={showOption.showAddRequest} onClose={onClose} requestType={requestListType.my}/>
             }
             {
                 showOption.showMyRequest &&
-                    <RequestList listType={requestListType.my} onClose={onClose}/>
+                    <RequestList listType={requestListType.my} onClose={onClose} userId={userId}/>
             }
             {
                 (showOption.showRequestManager || showOption.showUserManagement) &&
@@ -60,7 +64,7 @@ const OptionManager : FC<optionManagerProps> = ({showOption, onClose}) => {
             }
             {
                 showOption.showRequestManager &&
-                    <HumanResource/>
+                    <HumanResource userId={userId}/>
             }
             {
                 showOption.showUserManagement &&

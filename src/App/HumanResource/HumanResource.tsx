@@ -1,19 +1,40 @@
 import React, {FC, Fragment, useState} from 'react';
-import AddRequest from "../UserPage/AddRequest/AddRequest";
+import AddRequest, {initialState, RequestDialogInformation} from "../UserPage/AddRequest/AddRequest";
 import RequestList, {requestListType} from "../RequestList/RequestList";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import PersonManagement from "./PersonManagement/PersonManagement"
+import {RequestRow} from "../RequestList/RequestInterface/RequestInterface";
 
-const HumanResource : FC = () => {
+const getRequestInfoFromRequestRow = (request: RequestRow): RequestDialogInformation => {
+    return {
+        ID: request.personId,
+        beginEntrancePermit: request.startAccess,
+        endEntrancePermit: request.endAccess,
+        firstName: request.firstName,
+        lastName: request.lastName,
+        img: request.additionalInformation?.img || '',
+        information: request.additionalInformation?.info || '',
+        mobileNumber: request.additionalInformation?.phone || '',
+        reason: request.additionalInformation?.reason || ''
+    }
+};
+
+interface HumanResourceProps {
+    userId: string,
+}
+
+const HumanResource : FC<HumanResourceProps> = ({userId}) => {
     const [managerRequestInfo, setManagerRequestInfo] = useState<{
         personId: string,
         requestId: string,
         show: boolean,
+        requestInfo: RequestDialogInformation
     }>({
         requestId: '0',
         personId: '0',
-        show: false
+        show: false,
+        requestInfo: initialState
     });
 
     const [humanResourceSelect, setHumanResourceSelect] = useState<{
@@ -24,11 +45,12 @@ const HumanResource : FC = () => {
         persons: false
     });
 
-    const setRequestId = (requestId: string, personId: string) => {
+    const setRequestId = (requestId: string, personId: string, requestInfo: RequestDialogInformation) => {
         setManagerRequestInfo({
             requestId,
             personId,
-            show: true
+            show: true,
+            requestInfo
         })
     };
 
@@ -36,6 +58,7 @@ const HumanResource : FC = () => {
         setManagerRequestInfo({
             requestId: '0',
             personId: '0',
+            requestInfo: initialState,
             show: false
         })
     };
@@ -44,7 +67,14 @@ const HumanResource : FC = () => {
         <Fragment>
             {
                 managerRequestInfo.show &&
-                <AddRequest show={managerRequestInfo.show} onClose={closeManagerRequestDialog} requestType={requestListType.manager} requestId={managerRequestInfo.requestId} personId={managerRequestInfo.personId}/>
+                <AddRequest
+                    show={managerRequestInfo.show}
+                    onClose={closeManagerRequestDialog}
+                    requestType={requestListType.manager}
+                    requestId={managerRequestInfo.requestId}
+                    personId={managerRequestInfo.personId}
+                    requestInfo={managerRequestInfo.requestInfo}
+                />
             }
             <Grid container spacing={2}>
                 <Grid item xs={4}/>
@@ -84,7 +114,14 @@ const HumanResource : FC = () => {
             </Grid>
             {
                 humanResourceSelect.requests &&
-                    <RequestList listType={requestListType.manager} onClick={setRequestId}/>
+                    <RequestList
+                        listType={requestListType.manager}
+                        onClick={
+                            (requestId: string, personId: string, requestInfo: RequestRow) => {
+                                setRequestId(requestId, personId, getRequestInfoFromRequestRow(requestInfo));
+                        }}
+                        userId={userId}
+                    />
             }
             {
                 humanResourceSelect.persons &&

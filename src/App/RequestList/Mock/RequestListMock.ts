@@ -11,10 +11,12 @@ const mock: RequestRow[] = [
         state: RequestStatus.APPROVED,
         additionalInformation: {
             company: 'Silencio',
-            requestBy: 'Tal pahima',
+            requestBy: 'Tal 123',
             timestamp: new Date(),
             info: "nice",
-            reason: "Worker"
+            reason: "Worker",
+            phone: '',
+            img: '',
         }
     },
     {
@@ -30,7 +32,9 @@ const mock: RequestRow[] = [
             requestBy: 'Tal pahima',
             timestamp: new Date(),
             info: "nice",
-            reason: "Worker"
+            reason: "Worker",
+            phone: '',
+            img: '',
         }
     },
     {
@@ -45,8 +49,10 @@ const mock: RequestRow[] = [
             company: 'Silencio',
             requestBy: 'Tal pahima',
             timestamp: new Date(),
-            info: "nice",
-            reason: "Worker"
+            info: "nice3",
+            reason: "Worker",
+            phone: '',
+            img: '',
         }
     },
 ];

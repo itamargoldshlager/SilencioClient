@@ -10,6 +10,8 @@ export interface ManagerInformation {
     company: string,
     info: string,
     reason: string
+    phone: string
+    img: string,
 }
 
 export interface RequestRow {

@@ -50,6 +50,7 @@ const useStyles = makeStyles({
 
 interface UserPageProps {
     loggedInUserType: userType
+    userId: string
 }
 
 const initialOptionManager: optionManagerProps = {
@@ -61,8 +62,9 @@ const initialOptionManager: optionManagerProps = {
         showUserManagement: false,
     },
     onClose: () => {},
+    userId: ''
 };
-const UserPage : FC<UserPageProps> = ({loggedInUserType}) => {
+const UserPage : FC<UserPageProps> = ({loggedInUserType , userId}) => {
     const [optionManagerBools, setOptionManagerBools] = useState<optionManagerProps>(initialOptionManager);
 
     useEffect(() =>
@@ -72,12 +74,13 @@ const UserPage : FC<UserPageProps> = ({loggedInUserType}) => {
             setOptionManagerBools((prevState:optionManagerProps) => {
                 return {
                     onClose: prevState.onClose,
+                    userId: userId,
                     showOption: {
                         showRequestManager: false,
                         showMyRequest: false,
                         showMyDetails: false,
                         showAddRequest: false,
-                        showUserManagement: false
+                        showUserManagement: false,
                     },
                 }
             })
@@ -113,6 +116,7 @@ const UserPage : FC<UserPageProps> = ({loggedInUserType}) => {
                                             ...prevState.showOption,
                                             showMyDetails: true,
                                         },
+                                        userId: prevState.userId,
                                     }
                                 })
                             }}
@@ -139,6 +143,7 @@ const UserPage : FC<UserPageProps> = ({loggedInUserType}) => {
                                             ...prevState.showOption,
                                             showAddRequest: true,
                                         },
+                                        userId: prevState.userId
                                     }
                                 })
                             }}
@@ -165,6 +170,7 @@ const UserPage : FC<UserPageProps> = ({loggedInUserType}) => {
                                             ...prevState.showOption,
                                             showMyRequest: true,
                                         },
+                                        userId: prevState.userId
                                     }
                                 })
                             }}
@@ -194,6 +200,7 @@ const UserPage : FC<UserPageProps> = ({loggedInUserType}) => {
                                                         ...prevState.showOption,
                                                         showRequestManager: true,
                                                     },
+                                                    userId: prevState.userId
                                                 }
                                             })
                                         }}
@@ -222,6 +229,7 @@ const UserPage : FC<UserPageProps> = ({loggedInUserType}) => {
                                                                 ...prevState.showOption,
                                                                 showUserManagement: true,
                                                             },
+                                                            userId: prevState.userId
                                                         }
                                                     })
                                                 }}

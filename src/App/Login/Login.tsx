@@ -1,14 +1,14 @@
 import React, {ChangeEvent, FC, useState} from 'react';
-import loginImage from '../utils/Silencio.png'
+import loginImage from '../utils/Login.png'
 import Grid from '@material-ui/core/Grid';
 import {Button, TextField} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import {sendLoginRequest} from "./SendLoginRequest"
+import {sendLoginRequest, loginResponse} from "./SendLoginRequest"
 import {userType} from "../utils/UserType";
 
 const useStyles = makeStyles({
     root: {
-        marginTop: 100,
+        marginTop: 80,
         textAlign: 'center',
     },
     image: {
@@ -18,17 +18,26 @@ const useStyles = makeStyles({
     },
     loginButton: {
         margin: 5,
+        background: '#169BD5',
+        width: 150,
+        fontSize: 28
     },
     loginInput: {
         margin: 'auto',
         width: 300,
         marginTop: 20,
+    },
+    title: {
+        backgroundColor: '#3f5365',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderStyle: 'solid'
     }
 });
 
 
 interface LoginPageProps {
-    setLoggedIn: (fullName: string) => void
+    setLoggedIn: (fullName: string, userId: string) => void
     setLoggedInType: (type: userType) => void
 }
 
@@ -37,19 +46,24 @@ const LoginPage : FC<LoginPageProps> = ({setLoggedIn, setLoggedInType}) => {
     const [userName, setUserName] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
-    const handleLoginRequestResult = (result: string) => {
+    const handleLoginRequestResult = (result: loginResponse) => {
         console.log(result);
-        if (result === 'UNAUTHORIZED') {
+        if (result.role === 'UNAUTHORIZED') {
             window.alert("no!!!");
             setPassword('');
         } else {
-            setLoggedInType(result as userType);
-            setLoggedIn(userName);
+            setLoggedInType(result.role as userType);
+            setLoggedIn(userName, result.personId);
         }
     };
 
     return (
-        <Grid container className={classes.root}>
+        <Grid container className={classes.root} spacing={5}>
+            <Grid item xs={3}/>
+            <Grid item xs={6} className={classes.title}>
+                <h1> Welcome To Silencio </h1>
+            </Grid>
+            <Grid item xs={3}/>
             <Grid item xs={3}/>
             <Grid item xs={6}>
                 <img src={loginImage}

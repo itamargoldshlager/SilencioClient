@@ -9,6 +9,7 @@ import ManagerRequestListRow from "./ManagerRequestList/ManagerRequestListRow";
 import ExitImage from "../utils/exit.png";
 import {fetchManagerRequests, fetchMyRequests} from "./FetchReqeusts/FetchReqeusts";
 import {RequestRow} from "./RequestInterface/RequestInterface";
+import {RequestDialogInformation} from "../UserPage/AddRequest/AddRequest";
 
 const useStyles = makeStyles({
     root: {
@@ -32,10 +33,11 @@ export enum requestListType {
 interface requestListProps {
     listType: requestListType
     onClose?:() => void
-    onClick?: (requestId: string, personId: string) => void;
+    onClick?: (requestId: string, personId: string, requestInfo: RequestRow) => void;
+    userId: string
 }
 
-const RequestList : FC<requestListProps> = ({listType, onClose, onClick}) => {
+const RequestList : FC<requestListProps> = ({listType, onClose, onClick, userId}) => {
     const classes = useStyles();
     const requestPerPage = 4;
     const [page, setPage] = useState(0);
@@ -55,12 +57,12 @@ const RequestList : FC<requestListProps> = ({listType, onClose, onClick}) => {
 
         if (listType === requestListType.my)
             fetchMyRequests(
-                "1",
+                userId,
                 callback
             );
         else
             fetchManagerRequests(callback)
-    }, [listType])
+    }, [listType]);
 
     // @ts-ignore
     return (
@@ -86,7 +88,7 @@ const RequestList : FC<requestListProps> = ({listType, onClose, onClick}) => {
                             <ManagerRequestListRow {...request}
                                 onClick={
                                     onClick ?
-                                        () => onClick(`${request.id}`, request.personId) :
+                                        () => onClick(`${request.id}`, request.personId, request) :
                                         () => {}
                                 }
                             />

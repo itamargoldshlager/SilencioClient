@@ -1,7 +1,15 @@
 import axios from "axios"
 import {address} from "../utils/ServerConf";
 
-export function sendLoginRequest(username: string, password: string, callback: (result: string) => void) {
+export interface loginResponse {
+    personId: string,
+    role: string
+}
+export function sendLoginRequest(
+    username: string,
+    password: string,
+    callback: (result: loginResponse) => void
+){
     axios.post(
         address + 'users/auth',
         {

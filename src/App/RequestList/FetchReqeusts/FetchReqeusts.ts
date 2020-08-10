@@ -48,7 +48,9 @@ export function fetchManagerRequests(callback: (arg: any) => void): void {
                                 requestBy: request.issuerId,
                                 company: personInfo.data.companyId,
                                 info: request.info,
-                                reason: request.reason
+                                reason: request.reason,
+                                phone: personInfo.data.phone,
+                                img: `https://silencio-faces.s3.eu-central-1.amazonaws.com/${request.personId}.jpg`,
                             }
                         };
 

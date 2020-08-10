@@ -10,7 +10,8 @@ import SystemDetect from "./SystemDetect/SystemDetect";
 
 const useStyles = makeStyles({
     root: {
-        height: '100%'
+        height: '100%',
+        padding: '0 0 0 0',
     },
     header: {
         height: '10%'
@@ -29,6 +30,7 @@ const useStyles = makeStyles({
 const Silencio : FC = () => {
     const [loggedIn, setLoggedIn] = useState<boolean>(true);
     const [userFullName, setUserFullName] = useState<string>('');
+    const [userId, setUserId] = useState<string>('1');
     const [headerContent, setHeaderContent] = useState<string>('Welcome, Itamar');
     const [loggedInUserType, setUserType] = useState<userType>(userType.MANAGER);
 
@@ -44,14 +46,18 @@ const Silencio : FC = () => {
                         {
                             loggedInUserType === userType.SECURITY ?
                                 <SystemDetect/> :
-                                <UserPage loggedInUserType={loggedInUserType}/>
+                                <UserPage
+                                    loggedInUserType={loggedInUserType}
+                                    userId={userId}
+                                />
                         }
                         <Footer/>
                     </Fragment> :
                     <LoginPage
-                        setLoggedIn={(fullName: string) => {
+                        setLoggedIn={(fullName: string, id: string) => {
                             setLoggedIn(true);
                             setUserFullName(fullName);
+                            setUserId(id);
                         }}
                         setLoggedInType={setUserType}
                     />

@@ -16,10 +16,14 @@ const useStyles = makeStyles({
             color: 'black'
         },
     },
-    exitImage: {
+    exitContainer: {
         position: 'absolute',
         top: 0,
-        left: 5,
+        right: 0,
+    },
+    exitImage: {
+        width: 42,
+        height: 40
     },
     title: {
         textAlign: 'center',
@@ -27,7 +31,6 @@ const useStyles = makeStyles({
     img: {
         maxWidth: 183,
         height: 270,
-        float: 'left'
     },
     information: {
         textAlign: 'center',
@@ -97,136 +100,140 @@ const UserDetails : FC<userDetailsProps> = ({onClose, open, id, HR = false }) =>
             <DialogContent
                 className={classes.root}
             >
-                <img
-                    className={classes.exitImage}
-                    src={ExitImage}
-                    onClick={onClose}
-                />
-                    <h1 className={classes.title}>Information</h1>
-                    <Grid container>
-                        <Grid item xs={4}>
-                            <img
-                                className={classes.img}
-                                src={img}
-                            />
-                        </Grid>
-                        <Grid item xs={8} className={classes.information}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={6}>
-                                    <TextField
-                                        disabled={true && !HR}
-                                        variant="outlined"
-                                        label="first name"
-                                        value={firstName}
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <TextField
-                                        disabled={true}
-                                        variant="outlined"
-                                        label="last name"
-                                        value={lastName}
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <TextField
-                                        disabled={true}
-                                        variant="outlined"
-                                        fullWidth
-                                        label="company"
-                                        value={company}
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <TextField
-                                        disabled={true}
-                                        variant="outlined"
-                                        fullWidth
-                                        label="phone number"
-                                        value={phoneNumber}
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <TextField
-                                        disabled={true}
-                                        variant="outlined"
-                                        fullWidth
-                                        label="ID"
-                                        value={id}
-                                    />
-                                </Grid>
+                <div className={classes.exitContainer}>
+                    <button
+                        className={classes.exitImage}
+                        onClick={onClose}
+                    >
+                        x
+                    </button>
+                </div>
+                <h1 className={classes.title}>Information</h1>
+
+                <Grid container>
+                    <Grid item xs={4}>
+                        <img
+                            className={classes.img}
+                            src={img}
+                        />
+                    </Grid>
+                    <Grid item xs={8} className={classes.information}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <TextField
+                                    disabled={true && !HR}
+                                    variant="outlined"
+                                    label="first name"
+                                    value={firstName}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    disabled={true}
+                                    variant="outlined"
+                                    label="last name"
+                                    value={lastName}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    disabled={true}
+                                    variant="outlined"
+                                    fullWidth
+                                    label="company"
+                                    value={company}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    disabled={true}
+                                    variant="outlined"
+                                    fullWidth
+                                    label="phone number"
+                                    value={phoneNumber}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    disabled={true}
+                                    variant="outlined"
+                                    fullWidth
+                                    label="ID"
+                                    value={id}
+                                />
                             </Grid>
                         </Grid>
-                        <Grid xs={6}>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <KeyboardDateTimePicker
-                                    disabled={true}
-                                    fullWidth
-                                    disableToolbar
-                                    variant="inline"
-                                    format="dd/MM/yyyy HH:mm"
-                                    margin="normal"
-                                    id="date-picker-inline"
-                                    label="begin access date"
-                                    value={beginEntrancePermit}
-                                    onChange={()=> {}}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
-                                />
-                            </MuiPickersUtilsProvider>
-                        </Grid>
-                        <Grid xs={6}>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <KeyboardDateTimePicker
-                                    fullWidth
-                                    disabled={true}
-                                    disableToolbar
-                                    variant="inline"
-                                    format="dd/MM/yyyy HH:mm"
-                                    margin="normal"
-                                    id="date-picker-inline"
-                                    label="end access date"
-                                    value={endEntrancePermit}
-                                    onChange={()=> {}}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
-                                />
-                            </MuiPickersUtilsProvider>
-                        </Grid>
-                        <Grid xs={6}>
-                            <TextField
+                    </Grid>
+                    <Grid xs={6}>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <KeyboardDateTimePicker
                                 disabled={true}
-                                variant="outlined"
                                 fullWidth
-                                label="Access confirmed by"
-                                value={firstName}
+                                disableToolbar
+                                variant="inline"
+                                format="dd/MM/yyyy HH:mm"
+                                margin="normal"
+                                id="date-picker-inline"
+                                label="begin access date"
+                                value={beginEntrancePermit}
+                                onChange={()=> {}}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
                             />
-                        </Grid>
-                        {
-                            HR &&
-                            <Fragment>
-                                <Grid xs={3}>
-                                    <Button
-                                        className={classes.actionButton}
-                                        color="primary"
-                                        variant="contained"
-                                    >
-                                        Update
-                                    </Button>
-                                </Grid>
-                                <Grid xs={3}>
-                                    <Button
+                        </MuiPickersUtilsProvider>
+                    </Grid>
+                    <Grid xs={6}>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <KeyboardDateTimePicker
+                                fullWidth
+                                disabled={true}
+                                disableToolbar
+                                variant="inline"
+                                format="dd/MM/yyyy HH:mm"
+                                margin="normal"
+                                id="date-picker-inline"
+                                label="end access date"
+                                value={endEntrancePermit}
+                                onChange={()=> {}}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
+                            />
+                        </MuiPickersUtilsProvider>
+                    </Grid>
+                    <Grid xs={6}>
+                        <TextField
+                            disabled={true}
+                            variant="outlined"
+                            fullWidth
+                            label="Access confirmed by"
+                            value={firstName}
+                        />
+                    </Grid>
+                    {
+                        HR &&
+                        <Fragment>
+                            <Grid xs={3}>
+                                <Button
                                     className={classes.actionButton}
-                                    color="secondary"
+                                    color="primary"
                                     variant="contained"
-                                    >
-                                        Delete
-                                    </Button>
-                                </Grid>
-                            </Fragment>
-                        }
+                                >
+                                    Update
+                                </Button>
+                            </Grid>
+                            <Grid xs={3}>
+                                <Button
+                                className={classes.actionButton}
+                                color="secondary"
+                                variant="contained"
+                                >
+                                    Delete
+                                </Button>
+                            </Grid>
+                        </Fragment>
+                    }
                     </Grid>
             </DialogContent>
         </Dialog>

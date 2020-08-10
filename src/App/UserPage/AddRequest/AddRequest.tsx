@@ -17,17 +17,25 @@ import {RequestPersonInfo, SendPersonInfo, SendRequestInfo} from "./SendRequestD
 import Confirm from "./Confirm.png"
 import Reject from "./Reject.png"
 import {updateRequestState} from "./UpdateRequestState"
+import {RequestStatus} from "../../RequestList/RequestInterface/RequestInterface";
 
 const useStyles = makeStyles({
     root: {
         '& .MuiGrid-grid-xs-6': {
             padding: 20
         },
+        '& .MuiInputBase-input': {
+            color: 'black'
+        },
     },
-    exitImage: {
+    exitContainer: {
         position: 'absolute',
         top: 0,
-        left: 5,
+        right: 0,
+    },
+    exitImage: {
+        width: 42,
+        height: 40
     },
     sendImage: {
         padding: 30,
@@ -107,10 +115,12 @@ interface addRequestProps {
     onClose: () => void,
     requestType: requestListType
     requestId?: string
+    state?: RequestStatus
     personId?: string
+    requestInfo?: RequestDialogInformation
 }
 
-const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType, personId}) => {
+const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType, personId,state, requestInfo }) => {
     const classes = useStyles();
 
     const [newRequest, setNewRequest] = useState<RequestDialogInformation>(initialState);
@@ -118,11 +128,11 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
     const [disabled, setDisabled] = useState<boolean>(false);
 
     useEffect(() => {
-        if (requestId) {
-            setNewRequest(initialState);
+        if (requestInfo) {
+            setNewRequest(requestInfo);
             setDisabled(true);
         }
-    }, [requestId]);
+    }, [requestInfo]);
     const [showSuccessDialog, setShowSuccessDialog] = useState<boolean>(false);
 
     const sendRequest = () => {
@@ -178,11 +188,14 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                 <DialogContent
                     className={classes.root}
                 >
-                    <img
-                        className={classes.exitImage}
-                        src={ExitImage}
-                        onClick={onClose}
-                    />
+                    <div className={classes.exitContainer}>
+                        <button
+                            className={classes.exitImage}
+                            onClick={onClose}
+                        >
+                            x
+                        </button>
+                    </div>
                     <h1 className={classes.title}>Person requests</h1>
                     <Grid container>
                         <Grid item xs={4} className={classes.personImage}>
@@ -193,15 +206,17 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                                         style={{display: "none"}}
                                         type="file"
                                         accept="image/*"
-                                        onChange={(event: ChangeEvent<any>) => {
-                                            const newValue = event.target.files[0];
-                                            newValue !== undefined && setNewRequest(prevNewRequest => {
-                                                return {
-                                                    ...prevNewRequest,
-                                                    img: newValue
-                                                }
-                                            })
-                                        }
+                                        onChange={
+                                            (event: ChangeEvent<any>) => {
+                                                const newValue = event.target.files[0];
+                                                    newValue !== undefined && setNewRequest(prevNewRequest => {
+                                                        return {
+                                                            ...prevNewRequest,
+                                                            img: newValue
+                                                        }
+                                                    }
+                                                )
+                                            }
                                         }
                                     />
                                     Choose Image
@@ -209,14 +224,15 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                             }
                             {
                                 newRequest.img !== '' &&
-                                <img
-                                    src={URL.createObjectURL(newRequest.img)}
-                                    alt="product"
-                                    style={{
-                                        width: '100%',
-                                        height: '100%'
-                                    }}
-                                />
+                                    <img
+                                        src={requestId ? newRequest.img : URL.createObjectURL(newRequest.img)}
+                                        alt="product"
+                                        style={{
+                                            width: '100%',
+                                            height: '100%'
+                                        }}
+                                    />
+
                             }
                         </Grid>
                         <Grid container xs={8}>
@@ -421,36 +437,42 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                                         src={SendImage}
                                     /> :
                                     <Fragment>
-                                        <button
-                                            className={classes.confirmReject}
-                                            onClick={
-                                                () => confirmRejectRequest(true)
-                                            }
-                                        >
-                                            <div>
-                                                Confirm
-                                            </div>
-                                            <div>
-                                                <img
-                                                    src={Confirm}
-                                                />
-                                            </div>
-                                        </button>
-                                        <button
-                                            className={classes.confirmReject}
-                                            onClick={
-                                                () => confirmRejectRequest(false)
-                                            }
-                                        >
-                                            <div>
-                                                Reject
-                                            </div>
-                                            <div>
-                                                <img
-                                                    src={Reject}
-                                                />
-                                            </div>
-                                        </button>
+                                        {
+                                            state === RequestStatus.OPEN &&
+                                                <button
+                                                    className={classes.confirmReject}
+                                                    onClick={
+                                                        () => confirmRejectRequest(true)
+                                                    }
+                                                >
+                                                    <div>
+                                                        Confirm
+                                                    </div>
+                                                    <div>
+                                                        <img
+                                                            src={Confirm}
+                                                        />
+                                                    </div>
+                                                </button>
+                                        }
+                                        {
+                                            state === RequestStatus.OPEN &&
+                                                <button
+                                                    className={classes.confirmReject}
+                                                    onClick={
+                                                        () => confirmRejectRequest(false)
+                                                    }
+                                                >
+                                                    <div>
+                                                        Reject
+                                                    </div>
+                                                    <div>
+                                                        <img
+                                                            src={Reject}
+                                                        />
+                                                    </div>
+                                                </button>
+                                        }
                                     </Fragment>
                             }
                         </Grid>
