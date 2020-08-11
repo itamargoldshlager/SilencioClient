@@ -63,7 +63,7 @@ const UserManagement : FC = () => {
     const [editDialogInfo, setEditDialogInfo] = useState<EditUserDialogProps>({
         onClose: () => {},
         open: false,
-        userId: '1',
+        userName: '1',
         type: userType.USER,
     });
 
@@ -124,7 +124,7 @@ const UserManagement : FC = () => {
                                     setEditDialogInfo((prevState: EditUserDialogProps) => {
                                         return {
                                             ...prevState,
-                                            userId: user.id ? user.id : '0',
+                                            userName: user.username,
                                             type: user.role,
                                             open: true
                                         }

@@ -30,7 +30,7 @@ const useStyles = makeStyles({
 const Silencio : FC = () => {
     const [loggedIn, setLoggedIn] = useState<boolean>(true);
     const [userFullName, setUserFullName] = useState<string>('');
-    const [userId, setUserId] = useState<string>('1');
+    const [userId, setUserId] = useState<string>('123');
     const [headerContent, setHeaderContent] = useState<string>('Welcome, Itamar');
     const [loggedInUserType, setUserType] = useState<userType>(userType.MANAGER);
 

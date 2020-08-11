@@ -70,6 +70,7 @@ const UserPage : FC<UserPageProps> = ({loggedInUserType , userId}) => {
     useEffect(() =>
     setOptionManagerBools({
         ...initialOptionManager,
+        userId: userId,
         onClose: () => {
             setOptionManagerBools((prevState:optionManagerProps) => {
                 return {

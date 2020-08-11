@@ -43,7 +43,7 @@ const OptionManager : FC<optionManagerProps> = ({showOption, onClose, userId}) =
             }
             {
                 showOption.showAddRequest &&
-                    <AddRequest show={showOption.showAddRequest} onClose={onClose} requestType={requestListType.my}/>
+                    <AddRequest show={showOption.showAddRequest} onClose={onClose} requestType={requestListType.my} issuerId={userId}/>
             }
             {
                 showOption.showMyRequest &&

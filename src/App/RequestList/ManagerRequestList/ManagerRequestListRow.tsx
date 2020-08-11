@@ -5,10 +5,7 @@ import {TableCell, TableRow} from "@material-ui/core";
 const ManagerRequestListRow : FC<RequestRow> = ({id, personId, firstName, lastName, startAccess, endAccess, additionalInformation, onClick = () => {}}) => {
     return (
         <TableRow
-            onClick={() => {
-                onClick()
-                console.log("clicked")
-            }}
+            onClick={onClick}
         >
             <TableCell>{id}</TableCell>
             <TableCell>

@@ -118,9 +118,10 @@ interface addRequestProps {
     state?: RequestStatus
     personId?: string
     requestInfo?: RequestDialogInformation
+    issuerId?: string
 }
 
-const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType, personId,state, requestInfo }) => {
+const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType, personId,state, requestInfo , issuerId}) => {
     const classes = useStyles();
 
     const [newRequest, setNewRequest] = useState<RequestDialogInformation>(initialState);
@@ -147,7 +148,7 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
             },
             () => {
                 SendRequestInfo({
-                    issuerId: '1',
+                    issuerId: issuerId || '',
                     startAccess: newRequest.beginEntrancePermit.getTime(),
                     endAccess: newRequest.endEntrancePermit.getTime(),
                     personId: newRequest.ID,

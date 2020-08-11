@@ -74,6 +74,7 @@ const HumanResource : FC<HumanResourceProps> = ({userId}) => {
                     requestId={managerRequestInfo.requestId}
                     personId={managerRequestInfo.personId}
                     requestInfo={managerRequestInfo.requestInfo}
+                    issuerId={userId}
                 />
             }
             <Grid container spacing={2}>
