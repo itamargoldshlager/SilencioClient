@@ -1,4 +1,4 @@
-import React, {FC, Fragment, useEffect} from 'react';
+import React, {FC, Fragment, useEffect, useState} from 'react';
 import Slide from '@material-ui/core/Slide';
 import { TransitionProps } from '@material-ui/core/transitions';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,6 +9,7 @@ import {KeyboardDateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pick
 import {makeStyles} from "@material-ui/core/styles";
 import ExitImage from "../utils/exit.png"
 import MyImage from "./MyImage.jpg"
+import {FetchUserDetails} from "./FetchUserDetails";
 
 const useStyles = makeStyles({
     root: {
@@ -51,7 +52,7 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-interface userDetails {
+export interface userDetails {
     img: any,
     firstName: string,
     lastName: string,
@@ -78,18 +79,21 @@ const initialUserDetails: userDetails = {
     phoneNumber: "052-6533460"
 };
 
-const getUserDetails = (): userDetails => {
-    return initialUserDetails
+const getUserDetails = (userId: string, callback: (data: userDetails) => void): void => {
+    FetchUserDetails(userId, callback);
 };
 
 const UserDetails : FC<userDetailsProps> = ({onClose, open, id, HR = false }) => {
     const classes = useStyles();
 
-    let {img, firstName, lastName, company, phoneNumber,beginEntrancePermit, endEntrancePermit} = initialUserDetails;
+    const [details, setDetails] = useState<userDetails>(initialUserDetails);
 
     useEffect(() => {
-        ({img, firstName, lastName, company, phoneNumber,beginEntrancePermit, endEntrancePermit} = getUserDetails());
-    }, [id]);
+        if (open)
+            getUserDetails(id, setDetails);
+    }, [open, id]);
+
+    let {img, firstName, lastName, company, phoneNumber,beginEntrancePermit, endEntrancePermit} = details;
 
     return (
         <Dialog

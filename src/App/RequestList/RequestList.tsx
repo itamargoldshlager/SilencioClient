@@ -1,6 +1,6 @@
 import React, {FC, useEffect, useState} from 'react';
 import RequestMock from "./Mock/RequestListMock"
-import {TablePagination, Table} from "@material-ui/core";
+import {Table, TablePagination} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import MyRequestListHeader from "./MyRequestList/MyRequestListHeader";
 import MyRequestListRow from "./MyRequestList/MyRequestListRow";
@@ -8,8 +8,7 @@ import ManagerRequestListHeader from "./ManagerRequestList/ManagerRequestListHea
 import ManagerRequestListRow from "./ManagerRequestList/ManagerRequestListRow";
 import ExitImage from "../utils/exit.png";
 import {fetchManagerRequests, fetchMyRequests} from "./FetchReqeusts/FetchReqeusts";
-import {RequestRow} from "./RequestInterface/RequestInterface";
-import {RequestDialogInformation} from "../UserPage/AddRequest/AddRequest";
+import {RequestRow, RequestStatus} from "./RequestInterface/RequestInterface";
 
 const useStyles = makeStyles({
     root: {

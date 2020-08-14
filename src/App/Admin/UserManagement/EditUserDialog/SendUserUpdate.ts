@@ -4,7 +4,7 @@ import { address } from "../../../utils/ServerConf"
 export function setUserRole(username: string, role: string) {
     axios.put(
         `${address}users/role/${username}`,
-        `${role}`
+        {role},
     ).then(value =>
         {
             console.log(value.data)

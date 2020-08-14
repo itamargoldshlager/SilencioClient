@@ -96,6 +96,7 @@ export interface RequestDialogInformation {
     beginEntrancePermit: Date,
     endEntrancePermit: Date,
     information: string,
+    state?: RequestStatus
 }
 
 export const initialState: RequestDialogInformation = {
@@ -121,7 +122,7 @@ interface addRequestProps {
     issuerId?: string
 }
 
-const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType, personId,state, requestInfo , issuerId}) => {
+const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType, personId, requestInfo , issuerId}) => {
     const classes = useStyles();
 
     const [newRequest, setNewRequest] = useState<RequestDialogInformation>(initialState);
@@ -166,7 +167,7 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
         // state: APPROVED/ DECLINED
         // }
         if (requestId && personId) {
-            updateRequestState(personId, confirmReject, requestId);
+            updateRequestState(issuerId || '', personId, confirmReject, requestId);
             setShowSuccessDialog(true);
         }
     };
@@ -439,7 +440,7 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                                     /> :
                                     <Fragment>
                                         {
-                                            state === RequestStatus.OPEN &&
+                                            requestInfo && requestInfo.state === RequestStatus.OPEN &&
                                                 <button
                                                     className={classes.confirmReject}
                                                     onClick={
@@ -457,7 +458,7 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                                                 </button>
                                         }
                                         {
-                                            state === RequestStatus.OPEN &&
+                                            requestInfo && requestInfo.state === RequestStatus.OPEN &&
                                                 <button
                                                     className={classes.confirmReject}
                                                     onClick={

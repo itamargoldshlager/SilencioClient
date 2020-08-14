@@ -10,6 +10,7 @@ import EditUserDialog, {EditUserDialogProps} from "./EditUserDialog/EditUserDial
 import {fetchUsers} from "./FetchUsers/FetchUsers";
 import {deleteUser} from "./DeleteUser/DeleteUser";
 import {userType} from "../../utils/UserType";
+import {sendCreateUser} from "./CreateUser/SendCreateUser";
 
 const useStyles = makeStyles({
     root: {
@@ -26,13 +27,13 @@ const UserManagement : FC = () => {
 
     useEffect(() => {
         fetchUsers((data) => setUsers(data));
-        // createUser({
-        //     email: 'itamar@gmail',
-        //     password: '1',
-        //     personId: '1234',
-        //     role: 'MANAGER',
-        //     username: 'itagold'
-        // })
+        sendCreateUser({
+            email: 'itamar@gmail',
+            password: '1',
+            personId: '1234',
+            role: 'MANAGER',
+            username: 'itagold'
+        })
     }, []);
     const classes = useStyles();
 
