@@ -86,7 +86,7 @@ const UserPage : FC<UserPageProps> = ({loggedInUserType , userId}) => {
                 }
             })
         }
-    }), []);
+    }), [userId]);
 
 
     const classes = useStyles();
@@ -103,6 +103,7 @@ const UserPage : FC<UserPageProps> = ({loggedInUserType , userId}) => {
                                 className={classes.optionImage}
                                 style={{paddingLeft: 20}}
                                 src={DetailsImage}
+                                alt="showMyDetails"
                             />
                         </div>
                         <Button
@@ -130,6 +131,7 @@ const UserPage : FC<UserPageProps> = ({loggedInUserType , userId}) => {
                             <img
                                 className={classes.optionImage}
                                 src={AddRequestImage}
+                                alt="showAddRequest"
                             />
                         </div>
                         <Button
@@ -157,6 +159,7 @@ const UserPage : FC<UserPageProps> = ({loggedInUserType , userId}) => {
                             <img
                                 className={classes.optionImage}
                                 src={RequestListImage}
+                                alt="showMyRequest"
                             />
                         </div>
                         <Button
@@ -187,6 +190,7 @@ const UserPage : FC<UserPageProps> = ({loggedInUserType , userId}) => {
                                         <img
                                             className={classes.optionImage}
                                             src={RequestManagementImage}
+                                            alt="showRequestManager"
                                         />
                                     </div>
                                     <Button
@@ -216,6 +220,7 @@ const UserPage : FC<UserPageProps> = ({loggedInUserType , userId}) => {
                                                 <img
                                                     className={classes.optionImage}
                                                     src={UserManagementImage}
+                                                    alt="showUserManagement"
                                                 />
                                             </div>
                                             <Button

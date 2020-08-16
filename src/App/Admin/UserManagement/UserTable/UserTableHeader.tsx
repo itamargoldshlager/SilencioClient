@@ -6,7 +6,7 @@ const UserTableHeader : FC = () => {
         <TableHead>
             <TableRow>
                 <TableCell>
-                    Number
+                    ID
                 </TableCell>
                 <TableCell>
                     Username

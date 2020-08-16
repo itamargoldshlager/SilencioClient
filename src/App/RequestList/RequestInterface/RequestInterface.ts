@@ -5,7 +5,6 @@ export enum RequestStatus {
 }
 
 export interface ManagerInformation {
-    timestamp: Date,
     requestBy: string,
     company: string,
     info: string,
@@ -16,6 +15,7 @@ export interface ManagerInformation {
 
 export interface RequestRow {
     id: string,
+    timestamp: Date,
     firstName: string,
     lastName: string,
     personId: string,

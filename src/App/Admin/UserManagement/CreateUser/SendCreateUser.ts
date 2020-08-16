@@ -2,9 +2,11 @@ import axios from 'axios'
 import {address} from "../../../utils/ServerConf";
 import {UserRowProps} from "../UserTable/UserTableRow";
 
-export function sendCreateUser(user: UserRowProps) {
+export function sendCreateUser(userDetails: UserRowProps, onSuccess: () => void, onFailure: () => void) {
     axios.post(
         address + 'users',
-        user
-    )
+        userDetails
+    ).then(value => {
+        value.data ? onSuccess(): onFailure();
+    })
 }

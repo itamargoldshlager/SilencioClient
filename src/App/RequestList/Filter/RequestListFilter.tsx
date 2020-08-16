@@ -8,17 +8,18 @@ const useStyles = makeStyles({
     },
 
     textField: {
+        width: '50%',
         margin: 'auto',
         marginTop: 10
     }
 });
 
-interface UserTableFilterProps {
+interface RequestListFilterProps {
     searchBy: string,
     setSearchBy: (arg: string) => void;
 }
 
-const UserTableFilter : FC<UserTableFilterProps> = ({searchBy, setSearchBy}) => {
+const RequestListFilter : FC<RequestListFilterProps> = ({searchBy, setSearchBy}) => {
     const classes = useStyles();
 
     return (
@@ -28,7 +29,7 @@ const UserTableFilter : FC<UserTableFilterProps> = ({searchBy, setSearchBy}) => 
             <div className={classes.textField}>
                 <TextField
                     variant="outlined"
-                    label="Search by user name"
+                    label="Search by request id"
                     fullWidth
                     value={searchBy}
                     onChange={
@@ -41,4 +42,4 @@ const UserTableFilter : FC<UserTableFilterProps> = ({searchBy, setSearchBy}) => 
     );
 };
 
-export default UserTableFilter;
+export default RequestListFilter;

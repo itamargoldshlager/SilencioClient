@@ -1,13 +1,11 @@
 import React, {FC, useState, useEffect} from 'react';
-import Filter from "./Filter";
+import Filter, {SystemDetectDateFilter} from "./Filter";
 import PersonBox from "./PersonBox";
-import Footer from "../Footer/Footer";
 import {Grid, TablePagination} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import UserDetails, {userDetailsProps} from '../UserDetails/UserDetails';
 import {detectionEvent} from "./interfaces/interface";
 import {fetchInitialState} from "./ServerConnection/FetchInitialState";
-import {address} from "../utils/ServerConf";
 import {serverSendEventHandler} from "./ServerConnection/ServerSentEvent";
 
 const useStyles = makeStyles({
@@ -18,30 +16,12 @@ const useStyles = makeStyles({
 });
 
 
-const useEventSource = (url: string) => {
-    const [data, updateData] = useState(null);
-
-    useEffect(() => {
-        const source = new EventSource(url);
-
-        // source.onmessage = function logEvents(event) {
-        //     console.log(event.data);
-        //     updateData(JSON.parse(event.data));
-        // }
-
-        source.addEventListener("Detection", ((evt:any) => {
-            console.log(JSON.parse(evt.data));
-        }))
-    }, []);
-
-    return data;
-};
-
 const SystemDetect : FC = () => {
     const classes = useStyles();
-    // const data = useEventSource(address + "gate/updates");
+
     const [detects, setDetects] = useState<detectionEvent[]>([]);
-    const detectByOrder = detects.sort((a, b) => b.timestamp - a.timestamp);
+    const [filteredDetects, setFilteredDetects] = useState<detectionEvent[]>([]);
+
     useEffect(() => {
         fetchInitialState(setDetects);
         serverSendEventHandler((event: detectionEvent) => {
@@ -50,6 +30,7 @@ const SystemDetect : FC = () => {
             })
         })
     }, []);
+
     const [userDetailsInfo, setUserDetailsInfo] = useState<userDetailsProps>({
         open: false,
         onClose: () => {},
@@ -71,15 +52,63 @@ const SystemDetect : FC = () => {
 
     const personPerPage = 8;
     const [page, setPage] = useState(0);
-    const detectsToShow = detectByOrder.slice(page * personPerPage, page * personPerPage + personPerPage);
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
+
+    const [dateFilter, setDateFilter] = useState<SystemDetectDateFilter>({
+      begin: new Date(),
+      end: new Date(),
+      filter: false
+    });
+
+    const [indication, setIndication] = useState<string>('');
+
+    const handleChangeDateFilter = (beginOrEnd: boolean, newDate: Date) => {
+      let update = {};
+
+      beginOrEnd ? update = {begin: newDate} : update = {end: newDate};
+
+      setDateFilter(prevState => {
+          return {
+              ...prevState,
+              ...update,
+              filter: true
+          }
+      })
+    };
+
+    const [personId, setPersonId] = useState<string>('');
+
+    useEffect(() => {
+        let filtered = detects.filter(detect => detect.indication.indexOf(indication) !== -1);
+
+        if (personId !== '') {
+            filtered = filtered.filter(detect => detect.personId && detect.personId.indexOf(personId) !== -1);
+        }
+
+        if (dateFilter.filter) {
+            filtered = filtered.filter(detect => detect.timestamp > dateFilter.begin.getTime() && detect.timestamp < dateFilter.end.getTime())
+        }
+
+        setFilteredDetects(filtered);
+    }, [detects, dateFilter, indication, personId]);
+
+    const detectByOrder = filteredDetects.sort((a, b) => b.timestamp - a.timestamp);
+    const detectsToShow = detectByOrder.slice(page * personPerPage, page * personPerPage + personPerPage);
+
     return (
         <div>
             <UserDetails {...userDetailsInfo}/>
-            <Filter/>
+            <Filter
+                dateFilter= {dateFilter}
+                handleChangeDateFilter = {handleChangeDateFilter}
+                indication= {indication}
+                handleChangeIndication= {setIndication}
+                personId= {personId}
+                handleChangePersonId = {setPersonId}
+            />
                 <div className={classes.systemDetect}>
                     <Grid container spacing={5} >
                         {
@@ -88,13 +117,14 @@ const SystemDetect : FC = () => {
                                     key={index}
                                     {...detect}
                                     onClick={() => {
-                                        setUserDetailsInfo(prevState => {
-                                            return {
-                                                ...prevState,
-                                                open: true,
-                                                id: detect.personId ? detect.personId : '0'
-                                            }
-                                        });
+                                        detect.personId &&
+                                            setUserDetailsInfo(prevState => {
+                                                return {
+                                                    ...prevState,
+                                                    open: true,
+                                                    id: detect.personId
+                                                }
+                                            });
                                     }}
                                     onClose={() => {
                                         setUserDetailsInfo(prevState => {
@@ -121,7 +151,6 @@ const SystemDetect : FC = () => {
                         onChangePage={handleChangePage}
                     />
                 </div>
-            {/*<Footer/>*/}
         </div>
     );
 };

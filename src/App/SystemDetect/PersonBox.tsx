@@ -39,7 +39,7 @@ const PersonBox : FC<PersonProps> = ({personId, timestamp, imageUrl, indication 
                  }
                 alt="Person"
              />
-            <div> {new Date(timestamp).toLocaleDateString()} </div>
+            <div> {new Date(timestamp).toLocaleString()} </div>
             {
                 indication === 'GREEN' &&
                     <Fragment>

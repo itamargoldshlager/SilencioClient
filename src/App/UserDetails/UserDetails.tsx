@@ -7,7 +7,6 @@ import {Grid, TextField, Button} from '@material-ui/core';
 import DateFnsUtils from "@date-io/date-fns";
 import {KeyboardDateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import {makeStyles} from "@material-ui/core/styles";
-import ExitImage from "../utils/exit.png"
 import MyImage from "./MyImage.jpg"
 import {FetchUserDetails} from "./FetchUserDetails";
 
@@ -119,6 +118,7 @@ const UserDetails : FC<userDetailsProps> = ({onClose, open, id, HR = false }) =>
                         <img
                             className={classes.img}
                             src={img}
+                            alt="PersonImage"
                         />
                     </Grid>
                     <Grid item xs={8} className={classes.information}>
@@ -168,7 +168,7 @@ const UserDetails : FC<userDetailsProps> = ({onClose, open, id, HR = false }) =>
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid xs={6}>
+                    <Grid item xs={6}>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDateTimePicker
                                 disabled={true}
@@ -187,7 +187,7 @@ const UserDetails : FC<userDetailsProps> = ({onClose, open, id, HR = false }) =>
                             />
                         </MuiPickersUtilsProvider>
                     </Grid>
-                    <Grid xs={6}>
+                    <Grid item xs={6}>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDateTimePicker
                                 fullWidth
@@ -206,7 +206,7 @@ const UserDetails : FC<userDetailsProps> = ({onClose, open, id, HR = false }) =>
                             />
                         </MuiPickersUtilsProvider>
                     </Grid>
-                    <Grid xs={6}>
+                    <Grid item xs={6}>
                         <TextField
                             disabled={true}
                             variant="outlined"

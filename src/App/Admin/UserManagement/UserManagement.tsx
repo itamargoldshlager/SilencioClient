@@ -1,7 +1,6 @@
 import React, {FC, useEffect, useState} from 'react';
-import Users from "./Mock/UserMock"
 import UserTableRow, {UserRowProps} from './UserTable/UserTableRow';
-import {Paper, Table, TableCell, TableContainer, TablePagination, TableRow} from '@material-ui/core';
+import {Paper, Table, TableContainer, TablePagination} from '@material-ui/core';
 import UserTableHeader from './UserTable/UserTableHeader';
 import {makeStyles} from "@material-ui/core/styles";
 import RemoveUserDialog, {RemoveUserDialogProps} from "./RemoveUserDialog/RemoveUserDialog";
@@ -10,34 +9,47 @@ import EditUserDialog, {EditUserDialogProps} from "./EditUserDialog/EditUserDial
 import {fetchUsers} from "./FetchUsers/FetchUsers";
 import {deleteUser} from "./DeleteUser/DeleteUser";
 import {userType} from "../../utils/UserType";
-import {sendCreateUser} from "./CreateUser/SendCreateUser";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import CreateUser, {CreateUserProps} from "./CreateUser/CreateUser";
 
 const useStyles = makeStyles({
     root: {
         textAlign: 'initial'
     },
+    createUserButton: {
+        margin: 5,
+        background: '#169BD5',
+        width: 150,
+        fontSize: 18
+    },
 });
 
 const UserManagement : FC = () => {
+    const [filteredUsers, setFilteredUsers] = useState<UserRowProps[]>([]);
     const [users, setUsers] = useState<UserRowProps[]>([]);
 
     const removeUserFormList = (username: string): void => {
-      setUsers(users.filter(user => user.username !== username));
+        setUsers(users.filter(user => user.username !== username));
+    };
+
+    const addUserToList = (user: UserRowProps) => {
+        //[...users, user]
+        setUsers(prevState => {
+            return [...prevState, user]
+        })
     };
 
     useEffect(() => {
         fetchUsers((data) => setUsers(data));
-        sendCreateUser({
-            email: 'itamar@gmail',
-            password: '1',
-            personId: '1234',
-            role: 'MANAGER',
-            username: 'itagold'
-        })
     }, []);
     const classes = useStyles();
 
     const [searchBy, setSearchBy] = useState<string>('');
+
+    useEffect(() => {
+        setFilteredUsers(users.filter(user => user.username.indexOf(searchBy) !== -1));
+    }, [searchBy, users]);
 
     const [removeDialogInfo, setRemoveDeleteInfo] = useState<RemoveUserDialogProps>({
         onClose: () => {},
@@ -82,10 +94,31 @@ const UserManagement : FC = () => {
         })
     }, []);
 
+
+    const [createDialogInfo, setCreateDialogInfo] = useState<CreateUserProps>({
+        onClose: () => {},
+        open: false,
+        onCreate: addUserToList
+    });
+
+    useEffect(() => {
+        setCreateDialogInfo((prevState: CreateUserProps) => {
+            return {
+                ...prevState,
+                onClose: () => setCreateDialogInfo((prevState1:CreateUserProps) => {
+                    return {
+                        ...prevState1,
+                        open: false,
+                    }
+                })
+            }
+        })
+    }, []);
+
     const userPerPage = 5;
     const [page, setPage] = useState(0);
-    const userToShow = Users.slice(page * userPerPage, page * userPerPage + userPerPage);
-    const emptyRows = userPerPage - Math.min(userPerPage, Users.length - page * userPerPage);
+    const userToShow = filteredUsers.slice(page * userPerPage, page * userPerPage + userPerPage);
+
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
@@ -98,17 +131,45 @@ const UserManagement : FC = () => {
             {
                 editDialogInfo.open && <EditUserDialog {...editDialogInfo}/>
             }
-            <UserTableFilter
-                searchBy={searchBy}
-                setSearchBy={
-                    (value: string) => setSearchBy(value)
-                }
-            />
+            {
+                createDialogInfo.open && <CreateUser {...createDialogInfo}/>
+            }
+
+            <Grid container>
+                <Grid item xs={3}/>
+                <Grid item xs={6}>
+                    <UserTableFilter
+                        searchBy={searchBy}
+                        setSearchBy={
+                            (value: string) => setSearchBy(value)
+                        }
+                    />
+                </Grid>
+
+                <Grid item xs={3} style={{textAlign: 'center'}}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.createUserButton}
+                        onClick={() => {
+                            setCreateDialogInfo(prevState => {
+                                return {
+                                    ...prevState,
+                                    open: true,
+                                }
+                            })
+                        }}
+                    >
+                        Create
+                    </Button>
+                </Grid>
+
+            </Grid>
             <TableContainer component={Paper}>
                 <Table>
                     <UserTableHeader/>
                     {
-                        users.map(user =>
+                        userToShow.map(user =>
                             <UserTableRow
                                 {...user}
                                 onDelete={() =>
@@ -134,29 +195,21 @@ const UserManagement : FC = () => {
                             />
                         )
                     }
-
-                    {
-                        emptyRows > 0 && (
-                            <TableRow style={{ height: 62 * emptyRows }}>
-                                <TableCell colSpan={6} />
-                            </TableRow>
-                        )
-                    }
                 </Table>
-            </TableContainer>
 
-            <TablePagination
-                rowsPerPageOptions={[userPerPage]}
-                colSpan={3}
-                count={Users.length}
-                rowsPerPage={userPerPage}
-                page={page}
-                SelectProps={{
-                    inputProps: { 'aria-label': 'rows per page' },
-                    native: true,
-                }}
-                onChangePage={handleChangePage}
-            />
+                <TablePagination
+                    rowsPerPageOptions={[userPerPage]}
+                    colSpan={3}
+                    count={filteredUsers.length}
+                    rowsPerPage={userPerPage}
+                    page={page}
+                    SelectProps={{
+                        inputProps: { 'aria-label': 'rows per page' },
+                        native: true,
+                    }}
+                    onChangePage={handleChangePage}
+                />
+            </TableContainer>
         </div>
     );
 };

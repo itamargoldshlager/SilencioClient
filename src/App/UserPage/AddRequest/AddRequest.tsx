@@ -4,20 +4,20 @@ import {TransitionProps} from "@material-ui/core/transitions";
 import Slide from "@material-ui/core/Slide";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
-import ExitImage from "../../utils/exit.png";
 import SendImage from "../../utils/send.png"
 import Grid from "@material-ui/core/Grid";
 import {InputLabel, MenuItem, Select, TextField} from "@material-ui/core";
 import DateFnsUtils from "@date-io/date-fns";
-import {KeyboardDateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
+import {DateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import SuccessDialog from "./SuccessDialog";
 import {requestListType} from "../../RequestList/RequestList";
-import {RequestPersonInfo, SendPersonInfo, SendRequestInfo} from "./SendRequestData"
+import {SendPersonInfo, SendRequestInfo} from "./SendRequestData"
 import Confirm from "./Confirm.png"
 import Reject from "./Reject.png"
 import {updateRequestState} from "./UpdateRequestState"
 import {RequestStatus} from "../../RequestList/RequestInterface/RequestInterface";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles({
     root: {
@@ -125,6 +125,8 @@ interface addRequestProps {
 const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType, personId, requestInfo , issuerId}) => {
     const classes = useStyles();
 
+    const [showError, setShowError] = useState<boolean>(false);
+
     const [newRequest, setNewRequest] = useState<RequestDialogInformation>(initialState);
 
     const [disabled, setDisabled] = useState<boolean>(false);
@@ -135,37 +137,39 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
             setDisabled(true);
         }
     }, [requestInfo]);
+
     const [showSuccessDialog, setShowSuccessDialog] = useState<boolean>(false);
 
+    const validateInput = (request: RequestDialogInformation) : boolean => {
+        return request.endEntrancePermit.getTime() > request.beginEntrancePermit.getTime();
+    };
+
     const sendRequest = () => {
-        const PersonInfo: RequestPersonInfo = newRequest;
-        SendPersonInfo(
-            {
-                firstName: newRequest.firstName,
-                lastName: newRequest.lastName,
-                ID: newRequest.ID,
-                img: newRequest.img,
-                mobileNumber: newRequest.mobileNumber
-            },
-            () => {
-                SendRequestInfo({
-                    issuerId: issuerId || '',
-                    startAccess: newRequest.beginEntrancePermit.getTime(),
-                    endAccess: newRequest.endEntrancePermit.getTime(),
-                    personId: newRequest.ID,
-                    reason: newRequest.reason,
-                    info: newRequest.information,
+        if (validateInput(newRequest)) {
+            SendPersonInfo(
+                {
+                    firstName: newRequest.firstName,
+                    lastName: newRequest.lastName,
+                    ID: newRequest.ID,
+                    img: newRequest.img,
+                    mobileNumber: newRequest.mobileNumber
+                },
+                () => {
+                    SendRequestInfo({
+                        issuerId: issuerId || '',
+                        startAccess: newRequest.beginEntrancePermit.getTime(),
+                        endAccess: newRequest.endEntrancePermit.getTime(),
+                        personId: newRequest.ID,
+                        reason: newRequest.reason,
+                        info: newRequest.information,
+                    }, () => setShowSuccessDialog(true));
                 });
-            });
-        // setShowSuccessDialog(true);
+        } else {
+            setShowError(true);
+        }
     };
 
     const confirmRejectRequest = (confirmReject: boolean) => {
-        // /state/{personId} post
-        // data : {
-        // permitId: string
-        // state: APPROVED/ DECLINED
-        // }
         if (requestId && personId) {
             updateRequestState(issuerId || '', personId, confirmReject, requestId);
             setShowSuccessDialog(true);
@@ -228,7 +232,7 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                                 newRequest.img !== '' &&
                                     <img
                                         src={requestId ? newRequest.img : URL.createObjectURL(newRequest.img)}
-                                        alt="product"
+                                        alt="personImage"
                                         style={{
                                             width: '100%',
                                             height: '100%'
@@ -352,14 +356,11 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                         </Grid>
                         <Grid item xs={6}>
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <KeyboardDateTimePicker
+                                <DateTimePicker
                                     fullWidth
                                     disabled={disabled}
-                                    disableToolbar
-                                    variant="inline"
-                                    format="dd/MM/yyyy HH:mm"
-                                    margin="normal"
-                                    id="date-picker-inline"
+                                    inputVariant="outlined"
+                                    format="dd/MM/yyyy mm:HH"
                                     label="begin access date"
                                     value={newRequest.beginEntrancePermit}
                                     onChange={
@@ -373,22 +374,16 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                                             })
                                         }
                                     }
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
                                 />
                             </MuiPickersUtilsProvider>
                         </Grid>
                         <Grid item xs={6}>
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <KeyboardDateTimePicker
+                                <DateTimePicker
                                     fullWidth
                                     disabled={disabled}
-                                    disableToolbar
-                                    variant="inline"
-                                    format="dd/MM/yyyy HH:mm"
-                                    margin="normal"
-                                    id="date-picker-inline"
+                                    inputVariant="outlined"
+                                    format="dd/MM/yyyy mm:HH"
                                     label="end access date"
                                     value={newRequest.endEntrancePermit}
                                     onChange={
@@ -402,12 +397,17 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                                             })
                                         }
                                     }
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
                                 />
                             </MuiPickersUtilsProvider>
                         </Grid>
+                        {
+                            showError &&
+                                <Grid item xs={12}>
+                                    <Typography variant="body1" color="error">
+                                        end date need to be after start date
+                                    </Typography>
+                                </Grid>
+                        }
                         <Grid item xs={9}>
                             <TextField
                                 fullWidth
@@ -437,6 +437,7 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                                         onClick={sendRequest}
                                         className={classes.sendImage}
                                         src={SendImage}
+                                        alt="sendRequest"
                                     /> :
                                     <Fragment>
                                         {
@@ -453,6 +454,7 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                                                     <div>
                                                         <img
                                                             src={Confirm}
+                                                            alt="Confirm"
                                                         />
                                                     </div>
                                                 </button>
@@ -471,6 +473,7 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                                                     <div>
                                                         <img
                                                             src={Reject}
+                                                            alt="Reject"
                                                         />
                                                     </div>
                                                 </button>

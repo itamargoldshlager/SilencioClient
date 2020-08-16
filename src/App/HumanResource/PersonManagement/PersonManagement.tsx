@@ -3,10 +3,11 @@ import PersonTableHeader from "./PersonTable/PersonTableHeader";
 import PersonTableRow from "./PersonTable/PersonTableRow";
 import Table from '@material-ui/core/Table';
 import {makeStyles} from "@material-ui/core/styles";
-import {TablePagination} from "@material-ui/core";
+import {Paper, TableContainer, TablePagination} from "@material-ui/core";
 import UserDetails from "../../UserDetails/UserDetails"
 import {fetchPersons} from "./FetchPersons";
 import {PersonProps} from "./PersonTable/PersonTableRow";
+import PersonTableFilter from "./PersonTable/PersonTableFilter";
 
 const useStyles = makeStyles({
     root: {
@@ -18,6 +19,9 @@ const useStyles = makeStyles({
 
 const PersonManagement : FC = () => {
     const classes = useStyles();
+    const [searchBy, setSearchBy] = useState<string>('');
+    const [filteredPersons, setFilteredPersons] = useState<PersonProps[]>([]);
+
     const [persons, setPersons] = useState<PersonProps[]>([]);
 
     const [userDetails, setUserDetails] = useState<{
@@ -30,7 +34,7 @@ const PersonManagement : FC = () => {
 
     const personPerPage = 4;
     const [page, setPage] = useState(0);
-    const requestToShow = persons.slice(page * personPerPage, page * personPerPage + personPerPage);
+    const personsToShow = filteredPersons.slice(page * personPerPage, page * personPerPage + personPerPage);
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
@@ -41,6 +45,10 @@ const PersonManagement : FC = () => {
             setPersons(value);
         })
     , []);
+
+    useEffect(() => {
+        setFilteredPersons(persons.filter(person => person.personId.indexOf(searchBy) !== -1));
+    }, [searchBy, persons]);
 
     return (
         <div>
@@ -54,36 +62,40 @@ const PersonManagement : FC = () => {
                 }
                 HR={true}
             />
-            <Table className={classes.root}>
-                <PersonTableHeader/>
-                {
-                    requestToShow.map(person =>
-                        <PersonTableRow
-                            {...person}
-                            onClick={() =>
-                                setUserDetails({
-                                    open: true,
-                                    id: person.personId
-                                })
-                            }
-                        />
-                    )
-                }
 
-            </Table>
+            <PersonTableFilter searchBy={searchBy} setSearchBy={setSearchBy}/>
 
-            <TablePagination
-                rowsPerPageOptions={[personPerPage]}
-                colSpan={3}
-                count={persons.length}
-                rowsPerPage={personPerPage}
-                page={page}
-                SelectProps={{
-                    inputProps: { 'aria-label': 'rows per page' },
-                    native: true,
-                }}
-                onChangePage={handleChangePage}
-            />
+            <TableContainer component={Paper}>
+                <Table className={classes.root}>
+                    <PersonTableHeader/>
+                    {
+                        personsToShow.map(person =>
+                            <PersonTableRow
+                                {...person}
+                                onClick={() =>
+                                    setUserDetails({
+                                        open: true,
+                                        id: person.personId
+                                    })
+                                }
+                            />
+                        )
+                    }
+
+                </Table>
+                <TablePagination
+                    rowsPerPageOptions={[personPerPage]}
+                    colSpan={3}
+                    count={filteredPersons.length}
+                    rowsPerPage={personPerPage}
+                    page={page}
+                    SelectProps={{
+                        inputProps: { 'aria-label': 'rows per page' },
+                        native: true,
+                    }}
+                    onChangePage={handleChangePage}
+                />
+            </TableContainer>
         </div>
     );
 };

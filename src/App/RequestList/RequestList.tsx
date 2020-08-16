@@ -1,6 +1,5 @@
 import React, {FC, useEffect, useState} from 'react';
-import RequestMock from "./Mock/RequestListMock"
-import {Table, TablePagination} from "@material-ui/core";
+import {Paper, Table, TableContainer, TablePagination} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import MyRequestListHeader from "./MyRequestList/MyRequestListHeader";
 import MyRequestListRow from "./MyRequestList/MyRequestListRow";
@@ -8,7 +7,8 @@ import ManagerRequestListHeader from "./ManagerRequestList/ManagerRequestListHea
 import ManagerRequestListRow from "./ManagerRequestList/ManagerRequestListRow";
 import ExitImage from "../utils/exit.png";
 import {fetchManagerRequests, fetchMyRequests} from "./FetchReqeusts/FetchReqeusts";
-import {RequestRow, RequestStatus} from "./RequestInterface/RequestInterface";
+import {RequestRow} from "./RequestInterface/RequestInterface";
+import RequestListFilter from "./Filter/RequestListFilter";
 
 const useStyles = makeStyles({
     root: {
@@ -38,10 +38,13 @@ interface requestListProps {
 
 const RequestList : FC<requestListProps> = ({listType, onClose, onClick, userId}) => {
     const classes = useStyles();
+
+    const [searchBy, setSearchBy] = useState<string>('');
+    const [filteredRequests, setFilteredRequests] = useState<RequestRow[]>([]);
+
     const requestPerPage = 4;
     const [page, setPage] = useState(0);
     const [requests, setRequests] = useState<RequestRow[]>([]);
-    // const requestToShow = requests.slice(page * requestPerPage, page * requestPerPage + requestPerPage);
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
@@ -61,7 +64,15 @@ const RequestList : FC<requestListProps> = ({listType, onClose, onClick, userId}
             );
         else
             fetchManagerRequests(callback)
-    }, [listType]);
+    }, [listType, userId]);
+
+    useEffect(() => {
+        const filtered = requests.filter(request => request.id.indexOf(searchBy) !== -1);
+        filtered.sort((a: RequestRow,b: RequestRow) => b.timestamp.getTime() - a.timestamp.getTime());
+        setFilteredRequests(filtered);
+    }, [searchBy, requests]);
+
+    const requestToShow = filteredRequests.slice(page * requestPerPage, page * requestPerPage + requestPerPage);
 
     // @ts-ignore
     return (
@@ -72,41 +83,47 @@ const RequestList : FC<requestListProps> = ({listType, onClose, onClick, userId}
                         className={classes.exitImage}
                         src={ExitImage}
                         onClick={onClose}
+                        alt="ExitImage"
                     />
             }
-            <Table>
-                {
-                    listType === requestListType.my ?
-                        <MyRequestListHeader/> :
-                        <ManagerRequestListHeader/>
-                }
-                {
-                    requests.map((request: any, index: any) =>
-                        listType === requestListType.my ?
-                            <MyRequestListRow {...request}/> :
-                            <ManagerRequestListRow {...request}
-                                onClick={
-                                    onClick ?
-                                        () => onClick(`${request.id}`, request.personId, request) :
-                                        () => {}
-                                }
-                            />
-                    )
-                }
-            </Table>
 
-            <TablePagination
-                rowsPerPageOptions={[requestPerPage]}
-                colSpan={3}
-                count={RequestMock.length}
-                rowsPerPage={requestPerPage}
-                page={page}
-                SelectProps={{
-                    inputProps: { 'aria-label': 'rows per page' },
-                    native: true,
-                }}
-                onChangePage={handleChangePage}
-            />
+            <RequestListFilter searchBy={searchBy} setSearchBy={setSearchBy}/>
+
+            <TableContainer component={Paper}>
+                <Table>
+                    {
+                        listType === requestListType.my ?
+                            <MyRequestListHeader/> :
+                            <ManagerRequestListHeader/>
+                    }
+                    {
+                        requestToShow.map((request: any, index: any) =>
+                            listType === requestListType.my ?
+                                <MyRequestListRow {...request}/> :
+                                <ManagerRequestListRow {...request}
+                                    onClick={
+                                        onClick ?
+                                            () => onClick(`${request.id}`, request.personId, request) :
+                                            () => {}
+                                    }
+                                />
+                        )
+                    }
+                </Table>
+
+                <TablePagination
+                    rowsPerPageOptions={[requestPerPage]}
+                    colSpan={3}
+                    count={filteredRequests.length}
+                    rowsPerPage={requestPerPage}
+                    page={page}
+                    SelectProps={{
+                        inputProps: { 'aria-label': 'rows per page' },
+                        native: true,
+                    }}
+                    onChangePage={handleChangePage}
+                />
+            </TableContainer>
         </div>
     );
 };

@@ -1,7 +1,6 @@
-import React, {FC, Fragment, useEffect, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import SilencioImage from "../utils/Silencio.png";
 import {makeStyles} from "@material-ui/core/styles";
-import userEvent from "@testing-library/user-event";
 
 const useStyles = makeStyles({
     root: {

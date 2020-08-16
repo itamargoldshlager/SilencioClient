@@ -27,12 +27,20 @@ const useStyles = makeStyles({
     },
 });
 
+export interface userInfoProps {
+    loggedIn: boolean,
+    userId: string,
+    userType: userType,
+    userName: string,
+}
+
 const Silencio : FC = () => {
-    const [loggedIn, setLoggedIn] = useState<boolean>(true);
-    const [userFullName, setUserFullName] = useState<string>('');
-    const [userId, setUserId] = useState<string>('316');
-    const [headerContent, setHeaderContent] = useState<string>('Welcome, Itamar');
-    const [loggedInUserType, setUserType] = useState<userType>(userType.MANAGER);
+    const [userInfo, setUserInfo] = useState<userInfoProps>({
+        userId: '1',
+        loggedIn: true,
+        userType: userType.MANAGER,
+        userName: ''
+    });
 
     const {root, header, body} = useStyles();
     return (
@@ -40,26 +48,23 @@ const Silencio : FC = () => {
             <div className={header}/>
             <Grid item className={body}>
             {
-                loggedIn ?
+                userInfo.loggedIn ?
                     <Fragment>
-                        <Header title={headerContent}/>
+                        <Header title={`Welcome, ${userInfo.userName}`}/>
                         {
-                            loggedInUserType === userType.SECURITY ?
+                            userInfo.userType === userType.SECURITY ?
                                 <SystemDetect/> :
                                 <UserPage
-                                    loggedInUserType={loggedInUserType}
-                                    userId={userId}
+                                    loggedInUserType={userInfo.userType}
+                                    userId={userInfo.userId}
                                 />
                         }
-                        <Footer/>
+                        {/*<Footer/>*/}
                     </Fragment> :
                     <LoginPage
-                        setLoggedIn={(fullName: string, id: string) => {
-                            setLoggedIn(true);
-                            setUserFullName(fullName);
-                            setUserId(id);
+                        setLoggedIn={(args: userInfoProps) => {
+                            setUserInfo(args);
                         }}
-                        setLoggedInType={setUserType}
                     />
             }
             </Grid>

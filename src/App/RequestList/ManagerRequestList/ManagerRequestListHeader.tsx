@@ -12,8 +12,6 @@ const ManagerRequestListHeader : FC = () => {
                 <TableCell>id</TableCell>
                 <TableCell>First Name</TableCell>
                 <TableCell>Last Name</TableCell>
-                <TableCell>Begin access Date</TableCell>
-                <TableCell>End access Date</TableCell>
             </TableRow>
         </TableHead>
     );

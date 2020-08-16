@@ -1,24 +1,32 @@
 import React, {FC} from 'react';
 import {RequestRow} from "../RequestInterface/RequestInterface";
 import {TableCell, TableRow} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
 
-const ManagerRequestListRow : FC<RequestRow> = ({id, personId, firstName, lastName, startAccess, endAccess, additionalInformation, onClick = () => {}}) => {
+const useStyles = makeStyles({
+    row: {
+        cursor: 'pointer'
+    }
+});
+
+const ManagerRequestListRow : FC<RequestRow> = ({id, personId, firstName, lastName, timestamp, additionalInformation, onClick = () => {}}) => {
+    const classes = useStyles();
+
     return (
         <TableRow
             onClick={onClick}
+            className={classes.row}
         >
             <TableCell>{id}</TableCell>
             <TableCell>
-                <div>{additionalInformation?.timestamp.toLocaleTimeString()}</div>
-                <div>{additionalInformation?.timestamp.toLocaleDateString()}</div>
+                <div>{timestamp.toLocaleTimeString()}</div>
+                <div>{timestamp.toLocaleDateString()}</div>
             </TableCell>
             <TableCell>{additionalInformation?.requestBy}</TableCell>
             <TableCell>{additionalInformation?.company}</TableCell>
             <TableCell>{personId}</TableCell>
             <TableCell>{firstName}</TableCell>
             <TableCell>{lastName}</TableCell>
-            <TableCell>{startAccess.toLocaleDateString()}</TableCell>
-            <TableCell>{endAccess.toLocaleDateString()}</TableCell>
         </TableRow>
     );
 };

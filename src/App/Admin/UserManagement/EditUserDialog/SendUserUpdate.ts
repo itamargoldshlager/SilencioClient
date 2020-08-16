@@ -11,3 +11,14 @@ export function setUserRole(username: string, role: string) {
         }
     )
 }
+
+export function setUserPassword(username: string, password: string) {
+    axios.put(
+        `${address}users/password/${username}`,
+        {password},
+    ).then(value =>
+        {
+            console.log(value.data)
+        }
+    )
+}

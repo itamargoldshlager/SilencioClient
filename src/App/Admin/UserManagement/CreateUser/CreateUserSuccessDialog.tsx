@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
 import Dialog from '@material-ui/core/Dialog';
-import RequestImage from "./Request.png"
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
@@ -17,7 +16,7 @@ interface SuccessDialogProps {
     onClose: () => void,
 }
 
-const SuccessDialog : FC<SuccessDialogProps> = ({show, onClose}) => {
+const CreateUserSuccessDialog : FC<SuccessDialogProps> = ({show, onClose}) => {
     const classes = useStyles();
 
     return (
@@ -28,18 +27,12 @@ const SuccessDialog : FC<SuccessDialogProps> = ({show, onClose}) => {
         >
             <div>
                 <h2>
-                    Your request is sent . you can see the status in your requsets. <br/>
-                    thank you
+                    The user creation success <br/>
+                    The user can login now to the system
                 </h2>
-                <div>
-                    <img
-                        src={RequestImage}
-                        className={classes.img}/>
-                </div>
             </div>
-
         </Dialog>
     );
 };
 
-export default SuccessDialog;
+export default CreateUserSuccessDialog;
