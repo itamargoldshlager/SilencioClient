@@ -6,7 +6,6 @@ export enum RequestStatus {
 
 export interface ManagerInformation {
     requestBy: string,
-    company: string,
     info: string,
     reason: string
     phone: string
@@ -22,6 +21,7 @@ export interface RequestRow {
     startAccess: Date,
     endAccess: Date,
     state: RequestStatus
+    company: string,
     additionalInformation?: ManagerInformation,
     onClick?: () => void
 }

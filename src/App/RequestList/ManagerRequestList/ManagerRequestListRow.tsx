@@ -9,7 +9,7 @@ const useStyles = makeStyles({
     }
 });
 
-const ManagerRequestListRow : FC<RequestRow> = ({id, personId, firstName, lastName, timestamp, additionalInformation, onClick = () => {}}) => {
+const ManagerRequestListRow : FC<RequestRow> = ({id, personId, firstName, lastName, timestamp, company, additionalInformation, onClick = () => {}}) => {
     const classes = useStyles();
 
     return (
@@ -23,7 +23,7 @@ const ManagerRequestListRow : FC<RequestRow> = ({id, personId, firstName, lastNa
                 <div>{timestamp.toLocaleDateString()}</div>
             </TableCell>
             <TableCell>{additionalInformation?.requestBy}</TableCell>
-            <TableCell>{additionalInformation?.company}</TableCell>
+            <TableCell>{company}</TableCell>
             <TableCell>{personId}</TableCell>
             <TableCell>{firstName}</TableCell>
             <TableCell>{lastName}</TableCell>

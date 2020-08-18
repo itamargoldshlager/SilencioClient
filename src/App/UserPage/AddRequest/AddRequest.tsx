@@ -96,6 +96,7 @@ export interface RequestDialogInformation {
     beginEntrancePermit: Date,
     endEntrancePermit: Date,
     information: string,
+    company: string,
     state?: RequestStatus
 }
 
@@ -108,7 +109,8 @@ export const initialState: RequestDialogInformation = {
     ID: '',
     beginEntrancePermit: new Date(),
     endEntrancePermit: new Date(),
-    information: ''
+    information: '',
+    company: ''
 };
 
 interface addRequestProps {
@@ -152,7 +154,8 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                     lastName: newRequest.lastName,
                     ID: newRequest.ID,
                     img: newRequest.img,
-                    mobileNumber: newRequest.mobileNumber
+                    mobileNumber: newRequest.mobileNumber,
+                    company: newRequest.company
                 },
                 () => {
                     SendRequestInfo({
@@ -284,6 +287,7 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                             </Grid>
                             <Grid item xs={6}>
                                 <TextField
+                                    value={newRequest.company}
                                     fullWidth
                                     disabled={disabled}
                                     variant="outlined"

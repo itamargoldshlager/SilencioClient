@@ -8,6 +8,7 @@ import UserDetails from "../../UserDetails/UserDetails"
 import {fetchPersons} from "./FetchPersons";
 import {PersonProps} from "./PersonTable/PersonTableRow";
 import PersonTableFilter from "./PersonTable/PersonTableFilter";
+import {DeletePerson} from "./DeletePerson";
 
 const useStyles = makeStyles({
     root: {
@@ -50,6 +51,10 @@ const PersonManagement : FC = () => {
         setFilteredPersons(persons.filter(person => person.personId.indexOf(searchBy) !== -1));
     }, [searchBy, persons]);
 
+    const deletePersonFromList = (personId: string) => {
+        setPersons(persons.filter(person => person.personId !== personId))
+    };
+
     return (
         <div>
             <UserDetails
@@ -61,6 +66,12 @@ const PersonManagement : FC = () => {
                     })
                 }
                 HR={true}
+                onDelete = {
+                    (onClose: () => void) => {
+                        deletePersonFromList(userDetails.id);
+                        DeletePerson(userDetails.id, onClose);
+                    }
+                }
             />
 
             <PersonTableFilter searchBy={searchBy} setSearchBy={setSearchBy}/>

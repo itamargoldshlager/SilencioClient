@@ -237,11 +237,17 @@ const CreateUser : FC<CreateUserProps> = ({open, onClose, onCreate}) => {
                         <Grid item xs={12} style={{textAlign:'center'}}>
                             {
                                 personIdError &&
-                                <Grid item xs={12}>
+                                    <Grid item xs={12}>
+                                        <Typography variant="body1" color="error">
+                                            person id dont exists
+                                        </Typography>
+                                    </Grid>
+                            }
+                            {
+                                passwordError &&
                                     <Typography variant="body1" color="error">
-                                        person id dont exists
+                                        the passwords need to be the same
                                     </Typography>
-                                </Grid>
                             }
 
                             <Button

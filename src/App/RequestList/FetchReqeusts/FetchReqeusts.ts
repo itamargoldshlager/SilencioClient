@@ -18,6 +18,7 @@ export function fetchMyRequests(myId: string, callback: (arg: any) => void): voi
                             endAccess: new Date(request.endAccess),
                             state: request.state,
                             timestamp: new Date(request.timestamp),
+                            company: personInfo.data.companyId,
                         };
 
                         callback(userAndPermit)
@@ -45,9 +46,9 @@ export function fetchManagerRequests(callback: (arg: any) => void): void {
                             endAccess: new Date(request.endAccess),
                             state: request.state,
                             timestamp: new Date(request.timestamp),
+                            company: personInfo.data.companyId,
                             additionalInformation: {
                                 requestBy: request.issuerId,
-                                company: personInfo.data.companyId,
                                 info: request.info,
                                 reason: request.reason,
                                 phone: personInfo.data.phone,

@@ -1,1 +1,1 @@
-export const address = "http://40.117.175.158:80/";
+export const address = "http://a7a51d4d49a6c43ad8b440f1d149f4c6-1567990616.eu-central-1.elb.amazonaws.com:8080/";

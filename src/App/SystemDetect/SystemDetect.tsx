@@ -141,7 +141,7 @@ const SystemDetect : FC = () => {
                     <TablePagination
                         rowsPerPageOptions={[8]}
                         colSpan={3}
-                        count={detects.length}
+                        count={detectByOrder.length}
                         rowsPerPage={8}
                         page={page}
                         SelectProps={{

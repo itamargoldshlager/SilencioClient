@@ -17,7 +17,8 @@ const getRequestInfoFromRequestRow = (request: RequestRow): RequestDialogInforma
         information: request.additionalInformation?.info || '',
         mobileNumber: request.additionalInformation?.phone || '',
         reason: request.additionalInformation?.reason || '',
-        state: request.state
+        state: request.state,
+        company: request.company,
     }
 };
 

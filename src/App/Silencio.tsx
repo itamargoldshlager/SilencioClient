@@ -2,7 +2,6 @@ import React, {FC, Fragment, useState} from 'react';
 import LoginPage from './Login/Login';
 import {Grid} from '@material-ui/core';
 import Header from "./Header/Header";
-import Footer from "./Footer/Footer";
 import {makeStyles} from "@material-ui/core/styles";
 import UserPage from "./UserPage/UserPage";
 import {userType} from "./utils/UserType"
@@ -36,9 +35,9 @@ export interface userInfoProps {
 
 const Silencio : FC = () => {
     const [userInfo, setUserInfo] = useState<userInfoProps>({
-        userId: '1',
-        loggedIn: true,
-        userType: userType.MANAGER,
+        userId: '',
+        loggedIn: false,
+        userType: userType.USER,
         userName: ''
     });
 

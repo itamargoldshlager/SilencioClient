@@ -20,5 +20,6 @@ function resolveRequest(data: PersonProps): userDetails {
         lastName: data.lastName,
         phoneNumber: data.phone,
         img: `https://silencio-faces.s3.eu-central-1.amazonaws.com/${data.personId}.jpg`,
+        acceptedBy: data.permits[0].accepterId || '',
     }
 }

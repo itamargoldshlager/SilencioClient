@@ -5,9 +5,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import {Grid, TextField, Button} from '@material-ui/core';
 import DateFnsUtils from "@date-io/date-fns";
-import {KeyboardDateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
+import {DateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import {makeStyles} from "@material-ui/core/styles";
-import MyImage from "./MyImage.jpg"
 import {FetchUserDetails} from "./FetchUserDetails";
 
 const useStyles = makeStyles({
@@ -59,30 +58,33 @@ export interface userDetails {
     phoneNumber: string,
     beginEntrancePermit: Date,
     endEntrancePermit: Date
+    acceptedBy: string,
 }
 
 export interface userDetailsProps {
     open: boolean,
     onClose: () => void,
     id: string,
-    HR?: boolean
+    HR?: boolean,
+    onDelete?: ( onClose: () => void) => void
 }
 
 const initialUserDetails: userDetails = {
-    img: MyImage,
+    img: '',
     beginEntrancePermit: new Date(2020,1,1),
     endEntrancePermit: new Date(2021, 1,1),
-    company: "Silencio",
-    firstName: "Itamar",
-    lastName: "Goldshlager",
-    phoneNumber: "052-6533460"
+    company: "",
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    acceptedBy: ''
 };
 
 const getUserDetails = (userId: string, callback: (data: userDetails) => void): void => {
     FetchUserDetails(userId, callback);
 };
 
-const UserDetails : FC<userDetailsProps> = ({onClose, open, id, HR = false }) => {
+const UserDetails : FC<userDetailsProps> = ({onClose, open, id, HR = false, onDelete }) => {
     const classes = useStyles();
 
     const [details, setDetails] = useState<userDetails>(initialUserDetails);
@@ -92,7 +94,7 @@ const UserDetails : FC<userDetailsProps> = ({onClose, open, id, HR = false }) =>
             getUserDetails(id, setDetails);
     }, [open, id]);
 
-    let {img, firstName, lastName, company, phoneNumber,beginEntrancePermit, endEntrancePermit} = details;
+    let {img, firstName, lastName, company, phoneNumber,beginEntrancePermit, endEntrancePermit, acceptedBy} = details;
 
     return (
         <Dialog
@@ -125,7 +127,7 @@ const UserDetails : FC<userDetailsProps> = ({onClose, open, id, HR = false }) =>
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <TextField
-                                    disabled={true && !HR}
+                                    disabled={true}
                                     variant="outlined"
                                     label="first name"
                                     value={firstName}
@@ -168,41 +170,31 @@ const UserDetails : FC<userDetailsProps> = ({onClose, open, id, HR = false }) =>
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid item xs={6}>
+                </Grid>
+                <Grid container spacing={2}>
+                    <Grid item xs={6} className={classes.information}>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <KeyboardDateTimePicker
-                                disabled={true}
+                            <DateTimePicker
                                 fullWidth
-                                disableToolbar
-                                variant="inline"
-                                format="dd/MM/yyyy HH:mm"
-                                margin="normal"
-                                id="date-picker-inline"
+                                disabled={true}
+                                inputVariant="outlined"
+                                format="dd/MM/yyyy mm:HH"
                                 label="begin access date"
                                 value={beginEntrancePermit}
-                                onChange={()=> {}}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
-                                }}
+                                onChange={() => {}}
                             />
                         </MuiPickersUtilsProvider>
                     </Grid>
                     <Grid item xs={6}>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <KeyboardDateTimePicker
+                            <DateTimePicker
                                 fullWidth
                                 disabled={true}
-                                disableToolbar
-                                variant="inline"
-                                format="dd/MM/yyyy HH:mm"
-                                margin="normal"
-                                id="date-picker-inline"
+                                inputVariant="outlined"
+                                format="dd/MM/yyyy mm:HH"
                                 label="end access date"
                                 value={endEntrancePermit}
-                                onChange={()=> {}}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
-                                }}
+                                onChange={() => {}}
                             />
                         </MuiPickersUtilsProvider>
                     </Grid>
@@ -212,26 +204,23 @@ const UserDetails : FC<userDetailsProps> = ({onClose, open, id, HR = false }) =>
                             variant="outlined"
                             fullWidth
                             label="Access confirmed by"
-                            value={firstName}
+                            value={acceptedBy}
                         />
                     </Grid>
                     {
                         HR &&
                         <Fragment>
                             <Grid xs={3}>
-                                <Button
-                                    className={classes.actionButton}
-                                    color="primary"
-                                    variant="contained"
-                                >
-                                    Update
-                                </Button>
                             </Grid>
                             <Grid xs={3}>
                                 <Button
-                                className={classes.actionButton}
-                                color="secondary"
-                                variant="contained"
+                                    className={classes.actionButton}
+                                    color="secondary"
+                                    variant="contained"
+                                    onClick={
+                                        () =>
+                                            onDelete ? onDelete(onClose) : {}
+                                    }
                                 >
                                     Delete
                                 </Button>

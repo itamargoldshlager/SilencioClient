@@ -5,6 +5,7 @@ export interface RequestPersonInfo {
     lastName: string,
     mobileNumber: string,
     ID: string,
+    company: string,
     img: File
 }
 
@@ -32,7 +33,7 @@ export const SendPersonInfo = (person: RequestPersonInfo, callback: () => void):
     formData.append('lastName', person.lastName);
     formData.append('phone', person.mobileNumber);
     formData.append('personId', person.ID);
-    formData.append('companyId', '23');
+    formData.append('companyId', person.company);
 
     fetch(address  + "persons", {
         method: 'post',

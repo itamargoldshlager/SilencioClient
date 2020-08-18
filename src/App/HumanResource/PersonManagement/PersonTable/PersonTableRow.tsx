@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+import {makeStyles} from "@material-ui/core/styles";
 
 interface Permit {
     id: string,
@@ -11,7 +12,8 @@ interface Permit {
     reason: string,
     info: string,
     timestamp: number,
-    state: string
+    state: string,
+    accepterId: string,
 }
 
 export interface PersonProps {
@@ -24,9 +26,18 @@ export interface PersonProps {
     onClick?: () => void,
 }
 
+const useStyles = makeStyles({
+    row: {
+        cursor: 'pointer'
+    }
+});
+
 const PersonTableRow : FC<PersonProps> = ({personId, firstName, lastName, permits, onClick}) => {
+    const classes = useStyles();
+
     return (
         <TableRow
+            className={classes.row}
             onClick={onClick}
         >
             <TableCell>
