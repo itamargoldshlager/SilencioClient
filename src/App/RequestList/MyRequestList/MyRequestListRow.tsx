@@ -35,7 +35,6 @@ const MyRequestListRow : FC<RequestRow> = ({id, personId, firstName, lastName, s
             >
                 {state.toString()}
             </TableCell>
-            <TableCell></TableCell>
         </TableRow>
     );
 };

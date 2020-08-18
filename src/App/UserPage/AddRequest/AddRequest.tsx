@@ -292,6 +292,17 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                                     disabled={disabled}
                                     variant="outlined"
                                     label="Company"
+                                    onChange={
+                                        (event: ChangeEvent<HTMLInputElement>) => {
+                                            const newValue = event.target.value;
+                                            setNewRequest(prevNewRequest => {
+                                                return {
+                                                    ...prevNewRequest,
+                                                    company: newValue
+                                                }
+                                            })
+                                        }
+                                    }
                                 />
                             </Grid>
                             <Grid item xs={6}>

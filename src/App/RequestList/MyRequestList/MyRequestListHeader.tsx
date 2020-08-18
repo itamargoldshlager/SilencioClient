@@ -12,7 +12,6 @@ const MyRequestListHeader : FC = () => {
                 <TableCell>Begin access Date</TableCell>
                 <TableCell>End access Date</TableCell>
                 <TableCell>status</TableCell>
-                <TableCell>Extension of entry permit</TableCell>
             </TableRow>
         </TableHead>
     );
