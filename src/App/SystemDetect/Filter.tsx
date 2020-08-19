@@ -71,7 +71,7 @@ const Filter : FC<FilterProps> = ({dateFilter, handleChangeDateFilter, indicatio
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <DateTimePicker
                             inputVariant="outlined"
-                            format="dd/MM/yyyy mm:HH"
+                            format="dd/MM/yyyy HH:mm"
                             label="Start Date"
                             value={dateFilter.begin}
                             onChange={(data: any) => handleChangeDateFilter(true,  data)}
@@ -82,7 +82,7 @@ const Filter : FC<FilterProps> = ({dateFilter, handleChangeDateFilter, indicatio
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <DateTimePicker
                             inputVariant="outlined"
-                            format="dd/MM/yyyy mm:HH"
+                            format="dd/MM/yyyy HH:mm"
                             label="End Date"
                             value={dateFilter.end}
                             onChange={(data: any) => handleChangeDateFilter(false,  data)}

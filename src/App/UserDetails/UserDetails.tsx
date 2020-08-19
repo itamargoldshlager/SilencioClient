@@ -178,7 +178,7 @@ const UserDetails : FC<userDetailsProps> = ({onClose, open, id, HR = false, onDe
                                 fullWidth
                                 disabled={true}
                                 inputVariant="outlined"
-                                format="dd/MM/yyyy mm:HH"
+                                format="dd/MM/yyyy HH:mm"
                                 label="begin access date"
                                 value={beginEntrancePermit}
                                 onChange={() => {}}
@@ -191,7 +191,7 @@ const UserDetails : FC<userDetailsProps> = ({onClose, open, id, HR = false, onDe
                                 fullWidth
                                 disabled={true}
                                 inputVariant="outlined"
-                                format="dd/MM/yyyy mm:HH"
+                                format="dd/MM/yyyy HH:mm"
                                 label="end access date"
                                 value={endEntrancePermit}
                                 onChange={() => {}}

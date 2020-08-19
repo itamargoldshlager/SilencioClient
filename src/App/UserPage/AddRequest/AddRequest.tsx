@@ -375,7 +375,7 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                                     fullWidth
                                     disabled={disabled}
                                     inputVariant="outlined"
-                                    format="dd/MM/yyyy mm:HH"
+                                    format="dd/MM/yyyy HH:mm"
                                     label="begin access date"
                                     value={newRequest.beginEntrancePermit}
                                     onChange={
@@ -398,7 +398,7 @@ const AddRequest: FC<addRequestProps> = ({onClose, show, requestId, requestType,
                                     fullWidth
                                     disabled={disabled}
                                     inputVariant="outlined"
-                                    format="dd/MM/yyyy mm:HH"
+                                    format="dd/MM/yyyy HH:mm"
                                     label="end access date"
                                     value={newRequest.endEntrancePermit}
                                     onChange={
